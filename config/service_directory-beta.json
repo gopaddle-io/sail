@@ -1,0 +1,6 @@
+{
+	"configmanager.ep": {
+		"host": "beta.gopaddle.io",
+		"port": "8001"
+	}
+}

@@ -1,0 +1,13 @@
+{  
+    "mongodb":{  
+      "db-name":"gopaddlesampledb",
+      "db-endpoint":[  
+        "mongodb-1.gopaddle.io:27017"
+      ],
+      "db-port":"27017",
+      "user-db":"admin",
+      "db-user":"gopaddle",
+      "db-password":"P@55W0rD!@34"
+    }
+}
+  
