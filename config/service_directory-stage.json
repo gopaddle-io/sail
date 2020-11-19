@@ -1,6 +1,0 @@
-{
-	"configmanager.ep": {
-		"host": "stage.gopaddle.io",
-		"port": "8001"
-	}
-}
