@@ -213,7 +213,7 @@ func env_profile() {
 	file.Close()
 }
 
-func FinalImage(user string, workdir string) {
+func FinalImage(user string, workdir string, imagename string) {
 	_ = cmd.ExecuteAsScript("docker stop dev", "trace.dockerUtils Error : docker dev stop failed")
 	_ = cmd.ExecuteAsScript("docker commit dev dev", "trace.dockerUtils Error : docker dev commit failed")
 
@@ -245,8 +245,12 @@ func FinalImage(user string, workdir string) {
 		log.Println("trace.dockerUtils Error: file write")
 	}
 
-	_ = cmd.ExecuteAsScript("docker build -t final .", "trace.dockerUtils Error : docker final build failed")
-	_ = cmd.ExecuteAsScript("docker create -it --name final final", "trace.dockerUtils Error : docker final create failed")
-	_ = cmd.ExecuteAsScript("docker start final", "trace.dockerUtils Error : docker final start failed")
-	_ = cmd.ExecuteAsScript("docker commit final final", "trace.dockerUtils Error : docker final commit failed")
+
+	_ = cmd.ExecuteAsScript("docker build -t " + imagename + " ." , "trace.dockerUtils Error : docker final build failed")
+	_ = cmd.ExecuteAsScript("docker create -it --name " + imagename + " " + imagename, "trace.dockerUtils Error : docker final create failed")
+	//fmt.Println("create")
+	_ = cmd.ExecuteAsScript("docker start " + imagename, "trace.dockerUtils Error : docker final start failed")
+	//fmt.Println("Started didnt fail")
+	_ = cmd.ExecuteAsScript("docker commit "+imagename + " " + imagename, "trace.dockerUtils Error : docker final commit failed")
+	//fmt.Println("AGAIN")
 }

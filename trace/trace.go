@@ -260,7 +260,10 @@ func DockerCreate(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error in Json input startTracing.Osdetails")
 	}
 	json.Unmarshal(os_det_json, &os_details)
-
+	//
+	fmt.Println(os_det_json)
+	fmt.Println(os_details)
+	//
 	os_details = dockerUtils.CheckDockerImage(os_details)
 
 	if (startTrace.Osdetails{}) != os_details {
@@ -300,15 +303,43 @@ func FinalImageCreate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("trace.FinalImageCreate Error : username retrive error")
 	}
-
+	fmt.Println(user)
 	/* Working directory */
-	var workdir dockerUtils.Homedir
-	workdir_json, err := ioutil.ReadAll(r.Body)
+	//var workdir dockerUtils.Homedir
+	//workdir_json, err := ioutil.ReadAll(r.Body)
+
+
+
+	/*Osdetails := startTrace.Osdetails{os_name, os_ver}
+	OsMarshal, err := json.Marshal(Osdetails)
+	if err != nil {
+		log.Println("Osdetails json Marshal error")
+	}
+	OsJSON := json_util.Parse(OsMarshal)
+	context.Instance().SetJSON("os_details", OsJSON)*/
+
+
+	/*var os_details startTrace.Osdetails
+	os_det_json, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Printf("Error in Json input startTracing.Osdetails")
+	}
+	json.Unmarshal(os_det_json, &os_details)*/
+
+	//var image startTrace.Imagename
+
+
+	//////Imagename := startTrace.Imagename{finalImageName,workdir}
+	var imagevar startTrace.Imagename 
+	image_json, err := ioutil.ReadAll(r.Body)
+	fmt.Println(image_json)
 	if err != nil {
 		log.Println("trace.FinalImageCreate Error : json read failed")
 	}
-	json.Unmarshal(workdir_json, &workdir)
-
-	dockerUtils.FinalImage(user.Username, workdir.Home)
-	dockerUtils.DockerCleanup("dev")
+	//json.Unmarshal(workdir_json, &workdir)
+	json.Unmarshal(image_json, &imagevar)
+	fmt.Println("Happening")
+	fmt.Print(imagevar)
+	dockerUtils.FinalImage(user.Username, imagevar.Workdir, imagevar.Finalimagename)
+	//dockerUtils.DockerCleanup("dev")
 }
