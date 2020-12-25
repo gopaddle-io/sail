@@ -24,9 +24,9 @@
 /opt/tomcat/bin
 /opt/tomcat/bin/bootstrap.jar
 /opt/tomcat/bin/tomcat-juli.jar
-/tmp/.java_pid74578
+/tmp/.java_pid9268
 /tmp/hsperfdata_ria
-/tmp/hsperfdata_ria/74578
+/tmp/hsperfdata_ria/9268
 /usr
 /usr/lib
 /usr/lib/jvm
@@ -117,4 +117,4 @@
 /usr/share
 /usr/share/java
 /usr/share/java/java-atk-wrapper.jar
-74578
+9268

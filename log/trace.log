@@ -1,232 +1,234 @@
-74578 execve("/lib/jvm/java-11-openjdk-amd64//bin/java", ["/lib/jvm/java-11-openjdk-amd64//"..., "-Djava.util.logging.config.file="..., "-Djava.util.logging.manager=org."..., "-Djava.security.egd=file:///dev/"..., "-Djdk.tls.ephemeralDHKeySize=204"..., "-Djava.protocol.handler.pkgs=org"..., "-Dorg.apache.catalina.security.S"..., "-Xms512M", "-Xmx1024M", "-server", "-XX:+UseParallelGC", "-Dignore.endorsed.dirs=", "-classpath", "/opt/tomcat/bin/bootstrap.jar:/o"..., "-Dcatalina.base=/opt/tomcat", "-Dcatalina.home=/opt/tomcat", "-Djava.io.tmpdir=/opt/tomcat/tem"..., "org.apache.catalina.startup.Boot"..., "start"], 0x7fff00a60c98 /* 48 vars */) = 0
-74578 readlink("/proc/self/exe", "/usr/lib/jvm/java-11-openjdk-amd"..., 4096) = 43
-74578 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/haswell/x86_64/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/haswell/x86_64", 0x7ffddce73440) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/haswell/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/haswell", 0x7ffddce73440) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/x86_64/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/x86_64", 0x7ffddce73440) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls", 0x7ffddce73440) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/haswell/x86_64/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/haswell/x86_64", 0x7ffddce73440) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/haswell/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/haswell", 0x7ffddce73440) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/x86_64/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/x86_64", 0x7ffddce73440) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libjli.so", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/haswell/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/haswell/x86_64", 0x7ffddce73420) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/haswell/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/haswell", 0x7ffddce73420) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/x86_64", 0x7ffddce73420) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls", 0x7ffddce73420) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/haswell/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/haswell/x86_64", 0x7ffddce73420) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/haswell/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/haswell", 0x7ffddce73420) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/x86_64", 0x7ffddce73420) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74578 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/haswell/x86_64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/haswell/x86_64", 0x7ffddce73400) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/haswell/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/haswell", 0x7ffddce73400) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/x86_64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/x86_64", 0x7ffddce73400) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls", 0x7ffddce73400) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../haswell/x86_64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../haswell/x86_64", 0x7ffddce73400) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../haswell/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../haswell", 0x7ffddce73400) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../x86_64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../x86_64", 0x7ffddce73400) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/..", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74578 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74578 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
-74578 readlink("/proc/self/exe", "/usr/lib/jvm/java-11-openjdk-amd"..., 4096) = 43
-74578 access("/usr/lib/jvm/java-11-openjdk-amd64/lib/libjava.so", F_OK) = 0
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/jvm.cfg", O_RDONLY) = 3
-74578 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/server/libjvm.so", {st_mode=S_IFREG|0644, st_size=19110896, ...}) = 0
-74578 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/server/libjvm.so", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libstdc++.so.6", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
-74578 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = 3
-74579 openat(AT_FDCWD, "/sys/devices/system/cpu", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-74579 openat(AT_FDCWD, "/proc/stat", O_RDONLY|O_CLOEXEC) = 3
-74579 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-74579 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/librt.so.1", O_RDONLY|O_CLOEXEC) = 3
-74579 lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib/server", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib/server/libjvm.so", {st_mode=S_IFREG|0644, st_size=19110896, ...}) = 0
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", {st_mode=S_IFREG|0644, st_size=141978063, ...}) = 0
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libverify.so", {st_mode=S_IFREG|0644, st_size=67720, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libverify.so", O_RDONLY) = 3
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libverify.so", O_RDONLY|O_CLOEXEC) = 3
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libjava.so", {st_mode=S_IFREG|0644, st_size=182000, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjava.so", O_RDONLY) = 3
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjava.so", O_RDONLY|O_CLOEXEC) = 3
-74579 openat(AT_FDCWD, "/etc/localtime", O_RDONLY|O_CLOEXEC) = 3
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", {st_mode=S_IFREG|0644, st_size=30952, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", O_RDONLY) = 3
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", O_RDONLY|O_CLOEXEC) = 3
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", O_RDONLY) = 3
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", {st_mode=S_IFREG|0644, st_size=141978063, ...}) = 0
-74579 stat(".hotspotrc", 0x7f7345e86b20) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/proc/self/cgroup", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.use_hierarchy", O_RDONLY) = 5
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/endorsed", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/ext", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_quota_us", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_period_us", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.shares", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/proc/self/coredump_filter", O_RDWR) = 4
-74579 openat(AT_FDCWD, "/proc/self/coredump_filter", O_RDWR) = 4
-74579 openat(AT_FDCWD, "/etc/nsswitch.conf", O_RDONLY|O_CLOEXEC) = 4
-74579 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 4
-74579 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libnss_files.so.2", O_RDONLY|O_CLOEXEC) = 4
-74579 openat(AT_FDCWD, "/etc/passwd", O_RDONLY|O_CLOEXEC) = 4
-74579 openat(AT_FDCWD, "/tmp/hsperfdata_ria", O_RDONLY|O_NOFOLLOW) = -1 ENOENT (No such file or directory)
-74579 mkdir("/tmp/hsperfdata_ria", 0755) = 0
-74579 openat(AT_FDCWD, "/tmp/hsperfdata_ria", O_RDONLY|O_NOFOLLOW) = 4
-74579 openat(AT_FDCWD, "/tmp/hsperfdata_ria", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 5
-74579 openat(AT_FDCWD, ".", O_RDONLY)   = 4
-74579 openat(AT_FDCWD, "74578", O_RDWR|O_CREAT|O_NOFOLLOW|O_CLOEXEC, 0600) = 6
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", {st_mode=S_IFREG|0644, st_size=34872, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", O_RDONLY|O_CLOEXEC) = 4
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", {st_mode=S_IFREG|0644, st_size=141978063, ...}) = 0
-74579 lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", {st_mode=S_IFREG|0644, st_size=141978063, ...}) = 0
-74579 stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
-74579 lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/share", {st_mode=S_IFDIR|0755, st_size=12288, ...}) = 0
-74579 lstat("/usr/share/java", {st_mode=S_IFDIR|0755, st_size=12288, ...}) = 0
-74579 lstat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/share/java/java-atk-wrapper.jar", O_RDONLY) = 4
-74579 stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/share/java/java-atk-wrapper.jar", O_RDONLY) = 4
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_quota_us", O_RDONLY) = 5
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_period_us", O_RDONLY) = 5
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.shares", O_RDONLY) = 5
-74579 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/server/classes.jsa", O_RDONLY|O_CLOEXEC) = 5
-74579 stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
-74579 stat(".hotspot_compiler", 0x7f7345e876f0) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_quota_us", O_RDONLY) = 5
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_period_us", O_RDONLY) = 5
-74579 openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.shares", O_RDONLY) = 5
-74579 openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 5
-74579 openat(AT_FDCWD, "/etc/passwd", O_RDONLY|O_CLOEXEC) = 5
-74579 stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=285, ...}) = 0
-74579 getcwd("/home/ria/sail", 4096)    = 15
-74579 stat("/tmp/.java_pid74578", 0x7f7345e87ac0) = -1 ENOENT (No such file or directory)
-74587 openat(AT_FDCWD, "/sys/devices/system/cpu/online", O_RDONLY|O_CLOEXEC) = 5
-74586 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 5
-74586 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 5
-74579 lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/share", {st_mode=S_IFDIR|0755, st_size=12288, ...}) = 0
-74579 lstat("/usr/share/java", {st_mode=S_IFDIR|0755, st_size=12288, ...}) = 0
-74579 lstat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
-74579 stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
-74579 lstat("/opt", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat/bin", {st_mode=S_IFDIR|0750, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat/bin/bootstrap.jar", 0x7f7345e84b80) = -1 EACCES (Permission denied)
-74579 lstat("/opt", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat/bin", {st_mode=S_IFDIR|0750, st_size=4096, ...}) = 0
-74579 stat("/opt/tomcat/bin/bootstrap.jar", 0x7f7345e86c30) = -1 EACCES (Permission denied)
-74579 lstat("/opt", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat/bin", {st_mode=S_IFDIR|0750, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat/bin/tomcat-juli.jar", 0x7f7345e84b80) = -1 EACCES (Permission denied)
-74579 lstat("/opt", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/opt/tomcat/bin", {st_mode=S_IFDIR|0750, st_size=4096, ...}) = 0
-74579 stat("/opt/tomcat/bin/tomcat-juli.jar", 0x7f7345e86c30) = -1 EACCES (Permission denied)
-74586 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 5
-74586 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 5
-74579 stat("/opt/tomcat/bin/tomcat-juli.jar", 0x7f7345e81c80) = -1 EACCES (Permission denied)
-74579 stat("/opt/tomcat/bin/bootstrap.jar", 0x7f7345e83a20) = -1 EACCES (Permission denied)
-74586 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 5
-74586 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 5
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/conf/security/java.security", {st_mode=S_IFREG|0644, st_size=52040, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/conf/security/java.security", O_RDONLY) = 5
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", {st_mode=S_IFREG|0644, st_size=75840, ...}) = 0
-74579 lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-74579 lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", {st_mode=S_IFREG|0644, st_size=75840, ...}) = 0
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", {st_mode=S_IFREG|0644, st_size=75840, ...}) = 0
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", {st_mode=S_IFREG|0644, st_size=75840, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", O_RDONLY) = 5
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", O_RDONLY|O_CLOEXEC) = 5
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/haswell/x86_64/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/haswell/x86_64", 0x7f7345e7ddb0) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/haswell/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/haswell", 0x7f7345e7ddb0) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/x86_64/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/x86_64", 0x7f7345e7ddb0) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/tls", 0x7f7345e7ddb0) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/haswell/x86_64/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/haswell/x86_64", 0x7f7345e7ddb0) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/haswell/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/haswell", 0x7f7345e7ddb0) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/x86_64/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/x86_64", 0x7f7345e7ddb0) = -1 ENOENT (No such file or directory)
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libnet.so", O_RDONLY|O_CLOEXEC) = 5
-74579 getcwd("/home/ria/sail", 4097)    = 15
-74586 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 5
-74586 openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 5
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", {st_mode=S_IFREG|0644, st_size=30952, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", O_RDONLY) = 5
-74579 stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
-74579 stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/share/java/java-atk-wrapper.jar", O_RDONLY) = 5
-74579 stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", {st_mode=S_IFREG|0644, st_size=34872, ...}) = 0
-74579 openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", O_RDONLY) = 6
-74589 +++ exited with 0 +++
-74581 unlink("/tmp/hsperfdata_ria/74578") = 0
-74590 +++ exited with 1 +++
-74588 +++ exited with 1 +++
-74587 +++ exited with 1 +++
-74586 +++ exited with 1 +++
-74585 +++ exited with 1 +++
-74584 +++ exited with 1 +++
-74583 +++ exited with 1 +++
-74582 +++ exited with 1 +++
-74581 +++ exited with 1 +++
-74580 +++ exited with 1 +++
-74579 +++ exited with 1 +++
-74578 +++ exited with 1 +++
+9268  execve("/lib/jvm/java-11-openjdk-amd64//bin/java", ["/lib/jvm/java-11-openjdk-amd64//"..., "-Djava.util.logging.config.file="..., "-Djava.util.logging.manager=org."..., "-Djava.security.egd=file:///dev/"..., "-Djdk.tls.ephemeralDHKeySize=204"..., "-Djava.protocol.handler.pkgs=org"..., "-Dorg.apache.catalina.security.S"..., "-Xms512M", "-Xmx1024M", "-server", "-XX:+UseParallelGC", "-Dignore.endorsed.dirs=", "-classpath", "/opt/tomcat/bin/bootstrap.jar:/o"..., "-Dcatalina.base=/opt/tomcat", "-Dcatalina.home=/opt/tomcat", "-Djava.io.tmpdir=/opt/tomcat/tem"..., "org.apache.catalina.startup.Boot"..., "start"], 0x7fff34d3d8e8 /* 57 vars */) = 0
+9268  readlink("/proc/self/exe", "/usr/lib/jvm/java-11-openjdk-amd"..., 4096) = 43
+9268  access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/haswell/x86_64/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/haswell/x86_64", 0x7ffc4d272300) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/haswell/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/haswell", 0x7ffc4d272300) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/x86_64/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/x86_64", 0x7ffc4d272300) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/tls", 0x7ffc4d272300) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/haswell/x86_64/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/haswell/x86_64", 0x7ffc4d272300) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/haswell/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/haswell", 0x7ffc4d272300) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/x86_64/libjli.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/x86_64", 0x7ffc4d272300) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libjli.so", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/haswell/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/haswell/x86_64", 0x7ffc4d2722e0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/haswell/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/haswell", 0x7ffc4d2722e0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/x86_64", 0x7ffc4d2722e0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/tls", 0x7ffc4d2722e0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/haswell/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/haswell/x86_64", 0x7ffc4d2722e0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/haswell/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/haswell", 0x7ffc4d2722e0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/x86_64", 0x7ffc4d2722e0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9268  openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/haswell/x86_64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/haswell/x86_64", 0x7ffc4d2722c0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/haswell/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/haswell", 0x7ffc4d2722c0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/x86_64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/x86_64", 0x7ffc4d2722c0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../tls", 0x7ffc4d2722c0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../haswell/x86_64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../haswell/x86_64", 0x7ffc4d2722c0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../haswell/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../haswell", 0x7ffc4d2722c0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../x86_64/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../x86_64", 0x7ffc4d2722c0) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/..", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9268  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libz.so.1", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/bin/../lib/jli/../libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9268  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 6
+9268  readlink("/proc/self/exe", "/usr/lib/jvm/java-11-openjdk-amd"..., 4096) = 43
+9268  access("/usr/lib/jvm/java-11-openjdk-amd64/lib/libjava.so", F_OK) = 0
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/jvm.cfg", O_RDONLY) = 6
+9268  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/server/libjvm.so", {st_mode=S_IFREG|0644, st_size=19110896, ...}) = 0
+9268  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/server/libjvm.so", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libstdc++.so.6", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 6
+9268  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = 6
+9269  openat(AT_FDCWD, "/sys/devices/system/cpu", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 6
+9269  openat(AT_FDCWD, "/proc/stat", O_RDONLY|O_CLOEXEC) = 6
+9269  openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 6
+9269  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/librt.so.1", O_RDONLY|O_CLOEXEC) = 6
+9269  lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib/server", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib/server/libjvm.so", {st_mode=S_IFREG|0644, st_size=19110896, ...}) = 0
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", {st_mode=S_IFREG|0644, st_size=141978063, ...}) = 0
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libverify.so", {st_mode=S_IFREG|0644, st_size=67720, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libverify.so", O_RDONLY) = 6
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libverify.so", O_RDONLY|O_CLOEXEC) = 6
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libjava.so", {st_mode=S_IFREG|0644, st_size=182000, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjava.so", O_RDONLY) = 6
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjava.so", O_RDONLY|O_CLOEXEC) = 6
+9269  openat(AT_FDCWD, "/etc/localtime", O_RDONLY|O_CLOEXEC) = 6
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", {st_mode=S_IFREG|0644, st_size=30952, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", O_RDONLY) = 6
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", O_RDONLY|O_CLOEXEC) = 6
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", O_RDONLY) = 6
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", {st_mode=S_IFREG|0644, st_size=141978063, ...}) = 0
+9269  stat(".hotspotrc", 0x7f3705e04b20) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/proc/self/cgroup", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.use_hierarchy", O_RDONLY) = 8
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/endorsed", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/ext", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_quota_us", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_period_us", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.shares", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/proc/self/coredump_filter", O_RDWR) = 7
+9269  openat(AT_FDCWD, "/proc/self/coredump_filter", O_RDWR) = 7
+9269  openat(AT_FDCWD, "/etc/nsswitch.conf", O_RDONLY|O_CLOEXEC) = 7
+9269  openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 7
+9269  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libnss_files.so.2", O_RDONLY|O_CLOEXEC) = 7
+9269  openat(AT_FDCWD, "/etc/passwd", O_RDONLY|O_CLOEXEC) = 7
+9269  openat(AT_FDCWD, "/tmp/hsperfdata_ria", O_RDONLY|O_NOFOLLOW) = -1 ENOENT (No such file or directory)
+9269  mkdir("/tmp/hsperfdata_ria", 0755) = 0
+9269  openat(AT_FDCWD, "/tmp/hsperfdata_ria", O_RDONLY|O_NOFOLLOW) = 7
+9269  openat(AT_FDCWD, "/tmp/hsperfdata_ria", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 8
+9269  openat(AT_FDCWD, ".", O_RDONLY)   = 7
+9269  openat(AT_FDCWD, "9268", O_RDWR|O_CREAT|O_NOFOLLOW|O_CLOEXEC, 0600) = 9
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", {st_mode=S_IFREG|0644, st_size=34872, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", O_RDONLY|O_CLOEXEC) = 7
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", {st_mode=S_IFREG|0644, st_size=141978063, ...}) = 0
+9269  lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib/modules", {st_mode=S_IFREG|0644, st_size=141978063, ...}) = 0
+9269  stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
+9269  lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/share", {st_mode=S_IFDIR|0755, st_size=12288, ...}) = 0
+9269  lstat("/usr/share/java", {st_mode=S_IFDIR|0755, st_size=12288, ...}) = 0
+9269  lstat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/share/java/java-atk-wrapper.jar", O_RDONLY) = 7
+9269  stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/share/java/java-atk-wrapper.jar", O_RDONLY) = 7
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_quota_us", O_RDONLY) = 8
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_period_us", O_RDONLY) = 8
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.shares", O_RDONLY) = 8
+9269  --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/server/classes.jsa", O_RDONLY|O_CLOEXEC) = 8
+9269  stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
+9269  stat(".hotspot_compiler", 0x7f3705e056f0) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_quota_us", O_RDONLY) = 8
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.cfs_period_us", O_RDONLY) = 8
+9269  openat(AT_FDCWD, "/sys/fs/cgroup/cpu,cpuacct/user.slice/cpu.shares", O_RDONLY) = 8
+9269  openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 8
+9269  openat(AT_FDCWD, "/etc/passwd", O_RDONLY|O_CLOEXEC) = 8
+9269  stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=285, ...}) = 0
+9269  getcwd("/home/ria/sail", 4096)    = 15
+9269  stat("/tmp/.java_pid9268", 0x7f3705e05ac0) = -1 ENOENT (No such file or directory)
+9277  openat(AT_FDCWD, "/sys/devices/system/cpu/online", O_RDONLY|O_CLOEXEC) = 8
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 8
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 8
+9269  lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/share", {st_mode=S_IFDIR|0755, st_size=12288, ...}) = 0
+9269  lstat("/usr/share/java", {st_mode=S_IFDIR|0755, st_size=12288, ...}) = 0
+9269  lstat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
+9269  stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
+9269  lstat("/opt", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat/bin", {st_mode=S_IFDIR|0750, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat/bin/bootstrap.jar", 0x7f3705e02b80) = -1 EACCES (Permission denied)
+9269  lstat("/opt", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat/bin", {st_mode=S_IFDIR|0750, st_size=4096, ...}) = 0
+9269  stat("/opt/tomcat/bin/bootstrap.jar", 0x7f3705e04c30) = -1 EACCES (Permission denied)
+9269  lstat("/opt", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat/bin", {st_mode=S_IFDIR|0750, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat/bin/tomcat-juli.jar", 0x7f3705e02b80) = -1 EACCES (Permission denied)
+9269  lstat("/opt", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/opt/tomcat/bin", {st_mode=S_IFDIR|0750, st_size=4096, ...}) = 0
+9269  stat("/opt/tomcat/bin/tomcat-juli.jar", 0x7f3705e04c30) = -1 EACCES (Permission denied)
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 8
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 8
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 8
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 8
+9269  stat("/opt/tomcat/bin/tomcat-juli.jar", 0x7f3705dffc80) = -1 EACCES (Permission denied)
+9269  stat("/opt/tomcat/bin/bootstrap.jar", 0x7f3705e01a20) = -1 EACCES (Permission denied)
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/conf/security/java.security", {st_mode=S_IFREG|0644, st_size=52040, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/conf/security/java.security", O_RDONLY) = 8
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 9
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 9
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", {st_mode=S_IFREG|0644, st_size=75840, ...}) = 0
+9269  lstat("/usr", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+9269  lstat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", {st_mode=S_IFREG|0644, st_size=75840, ...}) = 0
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", {st_mode=S_IFREG|0644, st_size=75840, ...}) = 0
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", {st_mode=S_IFREG|0644, st_size=75840, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", O_RDONLY) = 8
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libnio.so", O_RDONLY|O_CLOEXEC) = 8
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/haswell/x86_64/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/haswell/x86_64", 0x7f3705dfbdb0) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/haswell/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/haswell", 0x7f3705dfbdb0) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/x86_64/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/x86_64", 0x7f3705dfbdb0) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/tls/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/tls", 0x7f3705dfbdb0) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/haswell/x86_64/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/haswell/x86_64", 0x7f3705dfbdb0) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/haswell/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/haswell", 0x7f3705dfbdb0) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/x86_64/libnet.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/x86_64", 0x7f3705dfbdb0) = -1 ENOENT (No such file or directory)
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libnet.so", O_RDONLY|O_CLOEXEC) = 8
+9269  getcwd("/home/ria/sail", 4097)    = 15
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", {st_mode=S_IFREG|0644, st_size=30952, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libjimage.so", O_RDONLY) = 8
+9269  stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.limit_in_bytes", O_RDONLY) = 8
+9276  openat(AT_FDCWD, "/sys/fs/cgroup/memory/user.slice/user-1000.slice/user@1000.service/memory.stat", O_RDONLY) = 8
+9269  stat("/usr/share/java/java-atk-wrapper.jar", {st_mode=S_IFREG|0644, st_size=53615, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/share/java/java-atk-wrapper.jar", O_RDONLY) = 8
+9269  stat("/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", {st_mode=S_IFREG|0644, st_size=34872, ...}) = 0
+9269  openat(AT_FDCWD, "/usr/lib/jvm/java-11-openjdk-amd64/lib/libzip.so", O_RDONLY) = 9
+9281  +++ exited with 0 +++
+9271  unlink("/tmp/hsperfdata_ria/9268") = 0
+9282  +++ exited with 1 +++
+9280  +++ exited with 1 +++
+9277  +++ exited with 1 +++
+9276  +++ exited with 1 +++
+9275  +++ exited with 1 +++
+9274  +++ exited with 1 +++
+9273  +++ exited with 1 +++
+9272  +++ exited with 1 +++
+9271  +++ exited with 1 +++
+9270  +++ exited with 1 +++
+9269  +++ exited with 1 +++
+9268  +++ exited with 1 +++
