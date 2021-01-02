@@ -2,6 +2,7 @@ package main
 
 
 import (
+	
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -87,23 +88,12 @@ func main() {
 			dockerizeCommand.PrintDefaults()
 			os.Exit(1)
 		}
-		
-		//values := map[string]string{"time":*dockerizeTimePtr}
-		//values2 := map[string]string{"osname":"ubuntu", "osver":"20.04"}
 		values4 := map[string]string{"finalimagename": *dockerizeImagePtr,"home": "/tmp"}
 		dir := [2]string{"packages.log", "pkg_install.sh"}
 		values3 := map[string][2]string{"dirs": dir}
-		//jsonStr, _ := json.Marshal(values)
-		//url := "http://localhost:9000/api/1/v1/startTracing?pid="+ *dockerizeTextPtr
-		//url1 := "http://localhost:9000/api/1/v1/dockercreate"
 		url2 := "http://localhost:9000/api/1/v1/dockercopy"
-		url3 := "http://localhost:9000/api/1/v1/finalimage"
-		
+		url3 := "http://localhost:9000/api/1/v1/finalimage"		
 		client := &http.Client{}
-		/*json1, err := json.Marshal(values2)
-		if err != nil {
-			panic(err)
-		}*/
 		json2, err3 := json.Marshal(values3)
 		if err3 != nil {
 			panic(err3)
@@ -112,36 +102,10 @@ func main() {
 		if err4 != nil {
 			panic(err4)
 		}		
-		/*request, err := http.NewRequest("PUT", url, bytes.NewBuffer(jsonStr))
-		response, err := client.Do(request)
-		if err != nil {
-			log.Fatal(err)
-		} else {
-			defer response.Body.Close()
-			_, err := ioutil.ReadAll(response.Body)
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Print("Tracing pid = " + *dockerizeTextPtr)
-			fmt.Println("   ", response.StatusCode)*/
-			trace.StartTracing_noreq(*dockerizeTextPtr,*dockerizeTimePtr)
-			///////////////////////////////////////////////////////////////////////////////////
-			/*client1 := &http.Client{}
-			req, err := http.NewRequest("PUT", url1, bytes.NewBuffer(json1))
-			if err != nil {
-				fmt.Println(err)
-			}
-			req.Header.Set("Content-Type", "application/json; charset=utf-8")
-			resp, err := client1.Do(req)
-			if err != nil {
-				fmt.Println(err)
-			}
-			fmt.Print("Creating container for image = " + *dockerizeImagePtr)
-			fmt.Println("  ",resp.StatusCode)*/
+		trace.StartTracing_noreq(*dockerizeTextPtr,*dockerizeTimePtr)
 			osname := "ubuntu"
 			osver := "20.04"
 			trace.DockerCreate_noreq(osname, osver, "final")
-			////////////////////////////////////////////////////////////////////////////////////
 			req1, err1 := http.NewRequest(http.MethodPut, url2, bytes.NewBuffer(json2))
 			if err1 != nil {
 				fmt.Println(err1)
@@ -152,8 +116,6 @@ func main() {
 				fmt.Println(err2)
 			}
 			fmt.Print("Copying log file of trace to container...")
-			//fmt.Println("   ",resp.StatusCode)
-			////////////////////////////////////////////////////////////////////////////////////
 			req3, err6 := http.NewRequest(http.MethodPut, url3, bytes.NewBuffer(json3))
 			if err6 != nil {
 				fmt.Println(err6)
@@ -166,7 +128,6 @@ func main() {
 			fmt.Print(*dockerizeImagePtr + " created")
 			fmt.Println("   ",resp.StatusCode)
 			fmt.Println("To check the image, use command : docker image inspect " + *dockerizeImagePtr)
-		//}
 	}
 
 	if helpCommand.Parsed() {

@@ -65,8 +65,7 @@ func CheckDockerImage(os_put startTrace.Osdetails) startTrace.Osdetails{
 }
 
 func DockerCleanup(container string) {
-	//command := fmt.Sprintf("docker stop %s", container)
-	//_ = cmd.ExecuteAsScript(command, "trace.dockerUtils Error : docker container does not exist")
+
 
 	command := fmt.Sprintf("docker rm %s", container)
 	_ = cmd.ExecuteAsScript(command, "trace.dockerUtils Error : docker container remove failed")
@@ -242,9 +241,6 @@ func FinalImage(user string, workdir string, imagename string) {
 
 	_ = cmd.ExecuteAsScript("docker build -t " + imagename + " ." , "trace.dockerUtils Error : docker final build failed")
 	_ = cmd.ExecuteAsScript("docker create -it --name " + imagename + " " + imagename, "trace.dockerUtils Error : docker final create failed")
-	//fmt.Println("create")
 	_ = cmd.ExecuteAsScript("docker start " + imagename, "trace.dockerUtils Error : docker final start failed")
-	//fmt.Println("Started didnt fail")
 	_ = cmd.ExecuteAsScript("docker commit "+imagename + " " + imagename, "trace.dockerUtils Error : docker final commit failed")
-	//fmt.Println("AGAIN")
 }

@@ -338,7 +338,6 @@ func FinalImageCreate(w http.ResponseWriter, r *http.Request) {
 	}
 	//json.Unmarshal(workdir_json, &workdir)
 	json.Unmarshal(image_json, &imagevar)
-	fmt.Println("Happening")
 	fmt.Print(imagevar)
 	dockerUtils.FinalImage(user.Username, imagevar.Workdir, imagevar.Finalimagename)
 	//dockerUtils.DockerCleanup("dev")

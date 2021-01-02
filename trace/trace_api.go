@@ -18,18 +18,7 @@ import (
 	"sort"
 	"strconv"
 	"time"
-
-	//"strconv"
-	//"strings"
 )
-
-/*type Details struct {
-	Osname string `json:"osname"`
-	Osver string `json:"osver"`
-	Cmd string `json:"cmd"`
-	DirList string `json:"dirlist"`
-}*/
-
 
 
 func StartTracing_noreq(pid string, trace_time int) {
@@ -143,13 +132,6 @@ func StartTracing_noreq(pid string, trace_time int) {
 
 func DockerCreate_noreq(osname string, osver string, imagename string) {
 	var os_details startTrace.Osdetails
-	//os_det_json, err := ioutil.ReadAll(r.Body)
-	/*if err != nil {
-		log.Printf("Error in Json input startTracing.Osdetails")
-	}*/
-	//json.Unmarshal(os_det_json, &os_details)
-	//
-	//fmt.Println(os_det_json)
 	os_details.Osname = osname
 	os_details.Osver = osver
 	fmt.Println(os_details)
