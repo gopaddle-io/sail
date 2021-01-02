@@ -19,7 +19,7 @@ const (
 )
 
 func main() {
-	port := ":8080"
+	port := ":9000"
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	args := os.Args[1:]

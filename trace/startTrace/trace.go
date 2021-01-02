@@ -68,6 +68,11 @@ type Start struct {
 	Cmd string `json:"cmd"`
 }
 
+type Imagename struct {
+	Finalimagename string `json:"finalimagename"`
+	Workdir string `json:"workdir"`
+}
+
 func CheckRequire(os_name string) {
 	switch os_name {
 	case "ubuntu" :
