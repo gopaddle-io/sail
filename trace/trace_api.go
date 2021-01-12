@@ -17,10 +17,12 @@ import (
 	cmd "github.com/gopaddle-io/sail/util/cmd"
 	context "github.com/gopaddle-io/sail/util/context"
 	json_util "github.com/gopaddle-io/sail/util/json"
+	clog "github.com/gopaddle-io/sail/util/log"
 	log "github.com/gopaddle-io/sail/util/log"
 )
 
 func GetList_noreq(requestID string) ([]listProcess.Process, error) {
+	clog.Init()
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
 	processes, err := listProcess.ProcessList(sCxt.Log)
@@ -40,6 +42,7 @@ func GetPorts_noreq(requestID string) (startTrace.Network, error) {
 	return network, nil
 }
 func GetFilesPkg_noreq(pid, requestID string) (startTrace.FilesPkg, error) {
+	clog.Init()
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
 	file, err := os.Open("~/.sail/" + pid + "/files.log")
@@ -56,7 +59,8 @@ func GetFilesPkg_noreq(pid, requestID string) (startTrace.FilesPkg, error) {
 	}
 
 	// packages
-	file, err = os.Open("~/.sail/" + pid + "/packages.log")
+	home := os.Getenv("HOME")
+	file, err = os.Open(home + "/.sail/" + pid + "/packages.log")
 	var pkg []string
 	if err != nil {
 		sCxt.Log.Println("module:sail", "requestID:"+requestID)
@@ -78,6 +82,7 @@ func GetFilesPkg_noreq(pid, requestID string) (startTrace.FilesPkg, error) {
 }
 
 func NfsMounts_noreq(requestID string) ([]startTrace.Nfs, error) {
+	clog.Init()
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
 	nfs_list, err := startTrace.GetNfsMounts(sCxt.Log)
@@ -87,6 +92,7 @@ func NfsMounts_noreq(requestID string) ([]startTrace.Nfs, error) {
 	return nfs_list, nil
 }
 func GetEnvVariables_noreq(pid, requestID string) (startTrace.EnvList, error) {
+	clog.Init()
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
 	env_list, err := startTrace.GetEnv(pid, sCxt.Log)
@@ -105,6 +111,7 @@ func GetStartCmd_noreq() startTrace.Start {
 	return startTrace.GetStartCmd()
 }
 func StartTracing_noreq(pid string, trace_time int, requestID string) (string, error) {
+	clog.Init()
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
 	os_family, os_name, os_ver, err := cmd.GetOS()
@@ -220,13 +227,17 @@ func StartTracing_noreq(pid string, trace_time int, requestID string) (string, e
 		json.Unmarshal([]byte(os_string), &os_details)
 
 		sCxt.Log.Println("File and Package list making")
-		file_list := startTrace.GetDependFiles(pid, sCxt.Log)
+		file_list, err := startTrace.GetDependFiles(pid, sCxt.Log)
+		if err != nil {
+			return "", err
+		}
 		pkg_list := startTrace.GetDependPackages(os_details.Osname, file_list, sCxt.Log)
 
 		sort.Strings(file_list)
 
 		/* Packages */
-		file, err := os.OpenFile("~/.sail/"+pid+"/packages.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+		home := os.Getenv("HOME")
+		file, err := os.OpenFile(home+"/.sail/"+pid+"/packages.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			sCxt.Log.Printf("failed creating file: %s", err)
 			return "", err
@@ -242,7 +253,8 @@ func StartTracing_noreq(pid string, trace_time int, requestID string) (string, e
 		file.Close()
 
 		/* Files */
-		file, err = os.OpenFile("~/.sail/"+pid+"/files.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+
+		file, err = os.OpenFile(home+"/.sail/"+pid+"/files.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			sCxt.Log.Printf("failed creating file: %s", err)
 			return "", err
@@ -294,6 +306,7 @@ func DockerCreate_noreq(osname string, osver string, imagename string, requestID
 }
 
 func DockerCopy_noreq(dirs []string, requestID string) (string, error) {
+	clog.Init()
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
 	/* Copy User Defined Files */
@@ -317,6 +330,7 @@ func DockerCopy_noreq(dirs []string, requestID string) (string, error) {
 }
 
 func FinalImageCreate_noreq(workdir string, imagename string, requestID string) (string, error) {
+	clog.Init()
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
 	/* User name */

@@ -142,11 +142,12 @@ func PortList(delay int, pid string, slog *logrus.Entry) (Network, error) {
 
 /* Edit trace.log and get file list */
 
-func GetDependFiles(pid string, slog *logrus.Entry) []string {
+func GetDependFiles(pid string, slog *logrus.Entry) ([]string, error) {
 	var trace_files []string
 	file, err := os.Open("~/.sail/" + pid + "trace.log")
 	if err != nil {
 		slog.Printf("trace/startTrace Error: File Open error")
+		return nil, err
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -162,7 +163,7 @@ func GetDependFiles(pid string, slog *logrus.Entry) []string {
 		}
 	}
 	trace_files = append(trace_files, "/etc/group", "/etc/passwd")
-	return trace_files
+	return trace_files, nil
 }
 
 /* Check if substr present in slice */
