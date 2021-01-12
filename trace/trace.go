@@ -135,7 +135,9 @@ func GetFilesPkg(rw http.ResponseWriter, req *http.Request) {
 	accID := vars["accountID"]
 	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to get file packages")
 	// files
-	file, err := os.Open("files.log")
+	keys := req.URL.Query()
+	pid := keys.Get("pid")
+	file, err := os.Open("~/.sail/" + pid + "/files.log")
 	var files []string
 	if err != nil {
 		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("trace.GetFiles Error : file open failed")
@@ -148,7 +150,7 @@ func GetFilesPkg(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	// packages
-	file, err = os.Open("packages.log")
+	file, err = os.Open("~/.sail/" + pid + "/packages.log")
 	var pkg []string
 	if err != nil {
 		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("trace.GetFiles Error : file open failed")
@@ -182,7 +184,7 @@ func NfsMounts(rw http.ResponseWriter, req *http.Request) {
 	accID := vars["accountID"]
 	slog := log.Log(accID, "module:sail", "requestID:"+requestID)
 	slog.Infoln("Requested to get NFS Mounts")
-	nfs_list := startTrace.GetNfsMounts(slog)
+	nfs_list, _ := startTrace.GetNfsMounts(slog)
 	json.NewEncoder(rw).Encode(nfs_list)
 }
 
@@ -201,7 +203,7 @@ func GetEnvVariables(rw http.ResponseWriter, req *http.Request) {
 	slog.Infoln("Requested to Get ENV variables")
 	keys := req.URL.Query()
 	pid := keys.Get("pid")
-	env_list := startTrace.GetEnv(pid, slog)
+	env_list, _ := startTrace.GetEnv(pid, slog)
 	env_marshall, err := json.Marshal(env_list)
 	if err != nil {
 		log.Println("Json Marshal failed")

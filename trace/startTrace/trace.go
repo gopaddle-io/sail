@@ -201,11 +201,12 @@ func GetDependPackages(os_name string, trace_files []string, slog *logrus.Entry)
 	return pkg_list
 }
 
-func GetNfsMounts(slog *logrus.Entry) []Nfs {
+func GetNfsMounts(slog *logrus.Entry) ([]Nfs, error) {
 	file, err := os.Open("/proc/mounts")
 	var nfs_list []Nfs
 	if err != nil {
 		slog.Printf("trace.NfsMounts Error /proc/mounts error")
+		return nfs_list, err
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -222,15 +223,16 @@ func GetNfsMounts(slog *logrus.Entry) []Nfs {
 			nfs_list = append(nfs_list, nfs)
 		}
 	}
-	return nfs_list
+	return nfs_list, nil
 }
 
-func GetEnv(pid string, slog *logrus.Entry) EnvList {
+func GetEnv(pid string, slog *logrus.Entry) (EnvList, error) {
 	envmap := make(map[string]string)
 	home := os.Getenv("HOME")
 	file, err := ioutil.ReadFile(home + "/.sail/" + pid + "/listenv.log")
 	if err != nil {
 		slog.Println("Failed on Reading env file : %s ", err.Error())
+		return EnvList{}, err
 	}
 	dst := string(file[:])
 	envs := strings.Split(dst, " ")
@@ -247,7 +249,7 @@ func GetEnv(pid string, slog *logrus.Entry) EnvList {
 		env.Value = v
 		envList.Env = append(envList.Env, env)
 	}
-	return envList
+	return envList, nil
 }
 
 func GetShell() Shell {

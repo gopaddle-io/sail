@@ -19,6 +19,90 @@ import (
 	"time"
 )
 
+func GetList_noreq(requestID string) ([]listProcess.Process, error) {
+	log := log.Log("module:sail", "requestID:"+requestID)
+	sCxt := NewSailContext(log, requestID)
+	processes, err := listProcess.ProcessList(sCxt.Log)
+	if err != nil {
+		return processes, err
+	}
+	return processes, nil
+}
+func GetPorts_noreq(requestID string) (startTrace.Network, error) {
+	network_json := context.Instance().GetJSON("network")
+	network_string := network_json.ToString()
+
+	var network startTrace.Network
+	if e := json.Unmarshal([]byte(network_string), &network); e != nil {
+		return network, e
+	}
+	return network, nil
+}
+func GetFilesPkg_noreq(pid, requestID string) (startTrace.FilesPkg, error) {
+	log := log.Log("module:sail", "requestID:"+requestID)
+	sCxt := NewSailContext(log, requestID)
+	file, err := os.Open("~/.sail/" + pid + "/files.log")
+	var files []string
+	if err != nil {
+		sCxt.Log.Println("module:sail", "requestID:"+requestID)
+		return startTrace.FilesPkg{}, err
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		files = append(files, line)
+	}
+
+	// packages
+	file, err = os.Open("~/.sail/" + pid + "/packages.log")
+	var pkg []string
+	if err != nil {
+		sCxt.Log.Println("module:sail", "requestID:"+requestID)
+		return startTrace.FilesPkg{}, err
+	}
+	defer file.Close()
+	scanner = bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		pkg = append(pkg, line)
+	}
+
+	// json response
+	filepkg := startTrace.FilesPkg{
+		Files: files,
+		Pkg:   pkg,
+	}
+	return filepkg, nil
+}
+
+func NfsMounts_noreq(requestID string) ([]startTrace.Nfs, error) {
+	log := log.Log("module:sail", "requestID:"+requestID)
+	sCxt := NewSailContext(log, requestID)
+	nfs_list, err := startTrace.GetNfsMounts(sCxt.Log)
+	if err != nil {
+		return nfs_list, err
+	}
+	return nfs_list, nil
+}
+func GetEnvVariables_noreq(pid, requestID string) (startTrace.EnvList, error) {
+	log := log.Log("module:sail", "requestID:"+requestID)
+	sCxt := NewSailContext(log, requestID)
+	env_list, err := startTrace.GetEnv(pid, sCxt.Log)
+	if err != nil {
+		return env_list, err
+	}
+	return env_list, nil
+}
+func GetShell_noreq() startTrace.Shell {
+	return startTrace.GetShell()
+}
+func GetUser_noreq() startTrace.User {
+	return startTrace.GetUser()
+}
+func GetStartCmd_noreq() startTrace.Start {
+	return startTrace.GetStartCmd()
+}
 func StartTracing_noreq(pid string, trace_time int, requestID string) (string, error) {
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
@@ -141,7 +225,7 @@ func StartTracing_noreq(pid string, trace_time int, requestID string) (string, e
 		sort.Strings(file_list)
 
 		/* Packages */
-		file, err := os.OpenFile("packages.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+		file, err := os.OpenFile("~/.sail/"+pid+"/packages.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			sCxt.Log.Printf("failed creating file: %s", err)
 			return "", err
@@ -157,7 +241,7 @@ func StartTracing_noreq(pid string, trace_time int, requestID string) (string, e
 		file.Close()
 
 		/* Files */
-		file, err = os.OpenFile("files.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+		file, err = os.OpenFile("~/.sail/"+pid+"/files.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			sCxt.Log.Printf("failed creating file: %s", err)
 			return "", err
