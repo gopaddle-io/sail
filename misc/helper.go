@@ -2,10 +2,11 @@ package misc
 
 import (
 	"encoding/json"
-	"gopaddle/sail/directory"
-	gson "gopaddle/sail/util/json"
-	"gopaddle/sail/util/log"
 	"runtime"
+
+	"github.com/gopaddle-io/sail/directory"
+	gson "github.com/gopaddle-io/sail/util/json"
+	"github.com/gopaddle-io/sail/util/log"
 )
 
 func BuildHTTPErrorJSON(message string, requestID string) string {

@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"gopaddle/sail/util/cmd"
-	"gopaddle/sail/util/context"
-	"gopaddle/sail/util/log"
 	"io/ioutil"
 	"os"
 	"os/user"
 	"strings"
+
+	"github.com/gopaddle-io/sail/util/cmd"
+	"github.com/gopaddle-io/sail/util/context"
+	"github.com/gopaddle-io/sail/util/log"
 
 	"github.com/sirupsen/logrus"
 )

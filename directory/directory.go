@@ -2,13 +2,14 @@ package directory
 
 import (
 	"fmt"
-	"gopaddle/sail/util/cmd"
-	"gopaddle/sail/util/context"
-	"gopaddle/sail/util/json"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/gopaddle-io/sail/util/cmd"
+	"github.com/gopaddle-io/sail/util/context"
+	"github.com/gopaddle-io/sail/util/json"
 )
 
 const (

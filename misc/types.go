@@ -1,16 +1,13 @@
 package misc
 
 import (
-	"gopaddle/clustermanager/cluster/dao"
-	"gopaddle/clustermanager/util/bhttp"
-
 	"github.com/sirupsen/logrus"
 )
 
 type InternalContext struct {
-	DS   dao.ReadWritter
-	Log  *logrus.Entry
-	HTTP bhttp.HTTPInterface
+	// DS   dao.ReadWritter
+	Log *logrus.Entry
+	// HTTP bhttp.HTTPInterface
 }
 
 type MiscHandle struct {

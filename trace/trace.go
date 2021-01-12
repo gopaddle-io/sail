@@ -3,17 +3,18 @@ package trace
 import (
 	"bufio"
 	"encoding/json"
-	misc "gopaddle/sail/misc"
-	"gopaddle/sail/trace/dockerUtils"
-	listProcess "gopaddle/sail/trace/listProcess"
-	startTrace "gopaddle/sail/trace/startTrace"
-	util "gopaddle/sail/util"
-	context "gopaddle/sail/util/context"
-	json_util "gopaddle/sail/util/json"
-	log "gopaddle/sail/util/log"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	misc "github.com/gopaddle-io/sail/misc"
+	"github.com/gopaddle-io/sail/trace/dockerUtils"
+	listProcess "github.com/gopaddle-io/sail/trace/listProcess"
+	startTrace "github.com/gopaddle-io/sail/trace/startTrace"
+	util "github.com/gopaddle-io/sail/util"
+	context "github.com/gopaddle-io/sail/util/context"
+	json_util "github.com/gopaddle-io/sail/util/json"
+	log "github.com/gopaddle-io/sail/util/log"
 
 	"strings"
 

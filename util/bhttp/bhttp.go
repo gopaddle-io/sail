@@ -5,11 +5,12 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"gopaddle/migrationservice/util"
-	"gopaddle/migrationservice/util/json"
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/gopaddle-io/sail/util"
+	"github.com/gopaddle-io/sail/util/json"
 
 	"github.com/sirupsen/logrus"
 )

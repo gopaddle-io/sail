@@ -1,11 +1,12 @@
 package db
 
 import (
-	"gopaddle/migrationservice/util/context"
 	"log"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/gopaddle-io/sail/util/context"
 
 	mgo "gopkg.in/mgo.v2"
 )

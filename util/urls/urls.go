@@ -5,12 +5,13 @@ import (
 	"crypto/tls"
 	gson "encoding/json"
 	"fmt"
-	"gopaddle/migrationservice/util/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/gopaddle-io/sail/util/json"
 )
 
 type Connection struct {

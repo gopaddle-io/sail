@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"gopaddle/sail/misc"
-	trace "gopaddle/sail/trace"
-	util "gopaddle/sail/util"
-	"gopaddle/sail/util/cmd"
 	"log"
 	"os"
 	"os/exec"
+
+	"github.com/gopaddle-io/sail/misc"
+	trace "github.com/gopaddle-io/sail/trace"
+	util "github.com/gopaddle-io/sail/util"
+	"github.com/gopaddle-io/sail/util/cmd"
 
 	flag "github.com/spf13/pflag"
 )

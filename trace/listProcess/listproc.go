@@ -2,10 +2,11 @@ package listProcess
 
 import (
 	"bufio"
-	cmd "gopaddle/sail/util/cmd"
 	"os"
 	"os/user"
 	"strings"
+
+	cmd "github.com/gopaddle-io/sail/util/cmd"
 
 	"github.com/sirupsen/logrus"
 )

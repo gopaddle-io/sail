@@ -4,15 +4,16 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"gopaddle/sail/trace/startTrace"
-	"gopaddle/sail/util/cmd"
-	"gopaddle/sail/util/context"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/gopaddle-io/sail/trace/startTrace"
+	"github.com/gopaddle-io/sail/util/cmd"
+	"github.com/gopaddle-io/sail/util/context"
 
 	"github.com/sirupsen/logrus"
 )

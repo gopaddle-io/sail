@@ -1,16 +1,17 @@
 package main
 
 import (
-	directory "gopaddle/sail/directory"
-	trace "gopaddle/sail/trace"
-	util "gopaddle/sail/util"
-	json "gopaddle/sail/util/json"
-	clog "gopaddle/sail/util/log"
 	"log"
 	"net/http"
 	"os"
 	"runtime"
 	"time"
+
+	directory "github.com/gopaddle-io/sail/directory"
+	trace "github.com/gopaddle-io/sail/trace"
+	util "github.com/gopaddle-io/sail/util"
+	json "github.com/gopaddle-io/sail/util/json"
+	clog "github.com/gopaddle-io/sail/util/log"
 	"github.com/gorilla/mux"
 )
 

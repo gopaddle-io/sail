@@ -2,12 +2,13 @@ package util
 
 import (
 	"fmt"
-	"gopaddle/sail/util/json"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"strconv"
 	"time"
+
+	"github.com/gopaddle-io/sail/util/json"
 
 	"github.com/google/uuid"
 )
