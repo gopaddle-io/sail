@@ -153,9 +153,11 @@ func StartTracing_noreq(pid string, trace_time int, requestID string) (string, e
 			sCxt.Log.Printf("Pid: %s does not exist", pid)
 			return "", errors.New("Pid: " + pid + " does not exist")
 		}
-
+		if _, pidDirerr := cmd.ExecuteAsScript("cd ~/ && mkdir "+".sail", "sail directory creation failed"); pidDirerr != nil {
+			// return "", pidDirerr
+		}
 		if _, pidDirerr := cmd.ExecuteAsScript("cd ~/.sail && mkdir "+pid, "pid directory creation failed"); pidDirerr != nil {
-			return "", pidDirerr
+			// return "", pidDirerr
 		}
 
 		if e := startTrace.ENVList(pid, sCxt.Log); e != nil {

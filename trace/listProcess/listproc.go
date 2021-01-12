@@ -22,7 +22,14 @@ type Process struct {
 
 func ListLog() error {
 	var args = []string{"-aeo", "uid,gid,pid,ppid,etimes,command"}
-	if err := cmd.ExecuteWithOut("ps", args, "./log/process_list.log"); err != nil {
+	if _, pidDirerr := cmd.ExecuteAsScript("cd ~/ && mkdir "+".sail", "sail directory creation failed"); pidDirerr != nil {
+		// return "", pidDirerr
+	}
+	if _, pidDirerr := cmd.ExecuteAsScript("cd ~/.sail && mkdir "+"log", "log directory creation failed"); pidDirerr != nil {
+		return pidDirerr
+	}
+	home := os.Getenv("HOME")
+	if err := cmd.ExecuteWithOut("ps", args, home+"/.sail/log/process_list.log"); err != nil {
 		return err
 	}
 	return nil
@@ -41,8 +48,8 @@ func ProcessList(slog *logrus.Entry) ([]Process, error) {
 		slog.Println("trace.startTrace Error : GetUser error %s", err.Error())
 		return processes, err
 	}
-
-	file, err := os.Open("./log/process_list.log")
+	home := os.Getenv("HOME")
+	file, err := os.Open(home + "/.sail/log/process_list.log")
 	if err != nil {
 		slog.Println("util/tools/process_list.go file error: %s", err.Error())
 		return processes, err
