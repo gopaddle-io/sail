@@ -3,193 +3,142 @@ package trace
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
+	misc "gopaddle/sail/misc"
 	"gopaddle/sail/trace/dockerUtils"
 	listProcess "gopaddle/sail/trace/listProcess"
 	startTrace "gopaddle/sail/trace/startTrace"
-	cmd "gopaddle/sail/util/cmd"
+	util "gopaddle/sail/util"
 	context "gopaddle/sail/util/context"
 	json_util "gopaddle/sail/util/json"
+	log "gopaddle/sail/util/log"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
-	"os/user"
-	"sort"
-	"strconv"
-	"time"
 
-	//"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 type Details struct {
-	Osname string `json:"osname"`
-	Osver string `json:"osver"`
-	Cmd string `json:"cmd"`
+	Osname  string `json:"osname"`
+	Osver   string `json:"osver"`
+	Cmd     string `json:"cmd"`
 	DirList string `json:"dirlist"`
 }
 
-func GetList(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	keys := r.URL.Query()
+func GetList(rw http.ResponseWriter, req *http.Request) {
+	// w.Header().Set("Content-Type", "application/json")
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	slog := log.Log(accID, "module:sail", "requestID:"+requestID)
+	slog.Infoln("Requested to Get List")
+	keys := req.URL.Query()
 	pid := keys.Get("pid")
 	cmd := keys.Get("cmd")
-	log.Printf("\n===== Process List =====")
-	processes := listProcess.ProcessList()
-	if pid == "" && cmd == "" {
-		json.NewEncoder(w).Encode(processes)
-	} else {
-		for _, singleProcess := range processes {
-			if pid != "" && singleProcess.Pid == pid {
-				log.Printf("Pid: %s", singleProcess.Pid)
-				json.NewEncoder(w).Encode(singleProcess)
-			} else if cmd != "" && strings.Contains(singleProcess.Cmd, cmd) {
-				json.NewEncoder(w).Encode(singleProcess)
-			}
-		}
-	}
-}
-
-func StartTracing(w http.ResponseWriter, r *http.Request) {
-	os_family, os_name, os_ver := cmd.GetOS()
-	log.Printf("Possible Docker Image => %s:%s", os_name, os_ver)
-
-	// os details in context
-	Osdetails := startTrace.Osdetails{os_name, os_ver}
-	OsMarshal, err := json.Marshal(Osdetails)
+	processes, err := listProcess.ProcessList(slog)
 	if err != nil {
-		log.Println("Osdetails json Marshal error")
+		response := misc.Response{Code: 500, Response: misc.BuildHTTPErrorJSON(err.Error(), requestID)}
+		rw.WriteHeader(response.Code)
+		rw.Write([]byte(response.Response))
 	}
-	OsJSON := json_util.Parse(OsMarshal)
-	context.Instance().SetJSON("os_details", OsJSON)
-
-
-	if os_family != "NA" {
-		/* Install required packages */
-		startTrace.CheckRequire(os_name)
-	} else {
-		log.Fatalf("Unknown os_family")
+	if pid == "" && cmd == "" && err != nil {
+		json.NewEncoder(rw).Encode(processes)
 	}
-	keys := r.URL.Query()
+	for _, singleProcess := range processes {
+		if pid != "" && singleProcess.Pid == pid {
+			log.Printf("Pid: %s", singleProcess.Pid)
+			json.NewEncoder(rw).Encode(singleProcess)
+		} else if cmd != "" && strings.Contains(singleProcess.Cmd, cmd) {
+			json.NewEncoder(rw).Encode(singleProcess)
+		}
+	}
+
+}
+
+func StartTracing(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to start a trace")
+	keys := req.URL.Query()
 	pid := keys.Get("pid")
-	if pid == "" {
-		log.Printf("Pid: %s does not exist", pid)
+	var trace_input startTrace.TraceInput
+	trace_json, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Printf("Error in Json input startTracing()")
+	}
+	json.Unmarshal(trace_json, &trace_input)
+	/* Get trace time */
+	trace_time := trace_input.Time
+	if trace_time == 0 {
+		trace_time = 2
+	}
+	resp, err := StartTracing_noreq(pid, trace_time, requestID)
+	if err != nil {
+		response := misc.Response{Code: 500, Response: misc.BuildHTTPErrorJSON(err.Error(), requestID)}
+		rw.WriteHeader(response.Code)
+		rw.Write([]byte(response.Response))
 	} else {
-		/* Get Single Process struct */
-		process := listProcess.GetOneProcess(pid)
-
-		/* Save process start command */
-		context.Instance().Set("proc_start",process.Cmd)
-
-		kill := fmt.Sprintf("kill %s", process.Pid)
-		log.Println(kill)
-		cmd.ExecuteAsScript(kill,"Process kill failed")
-		log.Printf("\nProcess (PID = %s) success", process.Pid)
-
-		/* Get PUT input as json */
-		var trace_input startTrace.TraceInput
-		trace_json, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Printf("Error in Json input startTracing()")
-		}
-		json.Unmarshal(trace_json, &trace_input)
-
-		/* Get trace time */
-		trace_time := trace_input.Time
-		log.Println(trace_time)
-
-		/* strace */
-		strace := fmt.Sprintf("timeout %ds strace -e trace=file -f -o log/trace.log %s", trace_time, process.Cmd)
-		fmt.Println(strace)
-		ps := cmd.ExecBg(strace)
-
-		/* Network Tracing */
-		new_pid := ps.Process.Pid
-		processes := listProcess.ProcessList()
-		var pid_list []string
-		pid_list = append(pid_list, strconv.Itoa(new_pid))
-		for _, singleprocess := range processes {
-			if pid == singleprocess.PPid {
-				pid_list = append(pid_list, singleprocess.Pid)
-			}
-		}
-
-		network := startTrace.PortList(trace_time, pid_list)
-		network_marshall, err := json.Marshal(network)
-		if err != nil{
-			log.Println("Json Marshall failed")
-		}
-
-		network_json := json_util.Parse(network_marshall)
-		context.Instance().SetJSON("network",network_json)
-
-		err = ps.Wait()
-		if err != nil {
-			log.Println(err)
-		}
-
-		time.Sleep(time.Duration(trace_time)*time.Second)
-
-		os_map := context.Instance().GetJSON("os_details")
-		os_string := os_map.ToString()
-		os_details := startTrace.Osdetails{}
-		json.Unmarshal([]byte(os_string), &os_details)
-
-		log.Println("File and Package list making")
-		file_list := startTrace.GetDependFiles()
-		pkg_list := startTrace.GetDependPackages(os_details.Osname, file_list)
-
-		sort.Strings(file_list)
-
-		/* Packages */
-		file, err := os.OpenFile("packages.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
-		if err != nil {
-			log.Fatalf("failed creating file: %s", err)
-		}
-
-		datawriter := bufio.NewWriter(file)
-
-		for _, pkg:= range pkg_list{
-			_, _ = datawriter.WriteString(pkg)
-		}
-
-		datawriter.Flush()
-		file.Close()
-
-		/* Files */
-		file, err = os.OpenFile("files.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
-		if err != nil {
-			log.Fatalf("failed creating file: %s", err)
-		}
-
-		datawriter = bufio.NewWriter(file)
-
-		for _, file := range file_list{
-			_, _ = datawriter.WriteString(file + "\n")
-		}
-
-		datawriter.Flush()
-		file.Close()
+		response := misc.Response{Code: 200, Response: misc.BuildHTTPErrorJSON(resp, requestID)}
+		rw.WriteHeader(response.Code)
+		rw.Write([]byte(response.Response))
 	}
 }
 
-func GetPorts(w http.ResponseWriter, r *http.Request) {
+func GetPorts(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Get Ports")
 	network_json := context.Instance().GetJSON("network")
 	network_string := network_json.ToString()
 
 	var network startTrace.Network
 	json.Unmarshal([]byte(network_string), &network)
 
-	json.NewEncoder(w).Encode(network)
+	json.NewEncoder(rw).Encode(network)
 }
 
-func GetFilesPkg(w http.ResponseWriter, r *http.Request) {
+func GetFilesPkg(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to get file packages")
 	// files
 	file, err := os.Open("files.log")
 	var files []string
 	if err != nil {
-		log.Println("trace.GetFiles Error : file open failed")
+		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("trace.GetFiles Error : file open failed")
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -202,7 +151,7 @@ func GetFilesPkg(w http.ResponseWriter, r *http.Request) {
 	file, err = os.Open("packages.log")
 	var pkg []string
 	if err != nil {
-		log.Println("trace.GetFiles Error : file open failed")
+		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("trace.GetFiles Error : file open failed")
 	}
 	defer file.Close()
 	scanner = bufio.NewScanner(file)
@@ -214,19 +163,45 @@ func GetFilesPkg(w http.ResponseWriter, r *http.Request) {
 	// json response
 	filepkg := startTrace.FilesPkg{
 		Files: files,
-		Pkg: pkg,
+		Pkg:   pkg,
 	}
 
-	json.NewEncoder(w).Encode(filepkg)
+	json.NewEncoder(rw).Encode(filepkg)
 }
 
-func NfsMounts(w http.ResponseWriter, r *http.Request) {
-	nfs_list := startTrace.GetNfsMounts()
-	json.NewEncoder(w).Encode(nfs_list)
+func NfsMounts(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	slog := log.Log(accID, "module:sail", "requestID:"+requestID)
+	slog.Infoln("Requested to get NFS Mounts")
+	nfs_list := startTrace.GetNfsMounts(slog)
+	json.NewEncoder(rw).Encode(nfs_list)
 }
 
-func GetEnvVariables(w http.ResponseWriter, r *http.Request) {
-	env_list := startTrace.GetEnv()
+func GetEnvVariables(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	slog := log.Log(accID, "module:sail", "requestID:"+requestID)
+	slog.Infoln("Requested to Get ENV variables")
+	keys := req.URL.Query()
+	pid := keys.Get("pid")
+	env_list := startTrace.GetEnv(pid, slog)
 	env_marshall, err := json.Marshal(env_list)
 	if err != nil {
 		log.Println("Json Marshal failed")
@@ -235,79 +210,126 @@ func GetEnvVariables(w http.ResponseWriter, r *http.Request) {
 	env_json := json_util.Parse(env_marshall)
 	context.Instance().SetJSON("env_list", env_json)
 
-	json.NewEncoder(w).Encode(env_list)
+	json.NewEncoder(rw).Encode(env_list)
 }
 
-func GetShell(w http.ResponseWriter, r *http.Request) {
+func GetShell(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Get Shell")
 	shell := startTrace.GetShell()
-	json.NewEncoder(w).Encode(shell)
+	json.NewEncoder(rw).Encode(shell)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
+func GetUser(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Get User")
 	user := startTrace.GetUser()
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(rw).Encode(user)
 }
 
-func GetStartCmd(w http.ResponseWriter, r *http.Request) {
+func GetStartCmd(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Get start command")
 	start := startTrace.GetStartCmd()
-	json.NewEncoder(w).Encode(start)
+	json.NewEncoder(rw).Encode(start)
 }
 
-func DockerCreate(w http.ResponseWriter, r *http.Request) {
+func DockerCreate(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Docker")
 	var os_details startTrace.Osdetails
-	os_det_json, err := ioutil.ReadAll(r.Body)
+	os_det_json, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		log.Printf("Error in Json input startTracing.Osdetails")
+		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Error in Json input startTracing.Osdetails")
 	}
 	json.Unmarshal(os_det_json, &os_details)
-	
-	os_details = dockerUtils.CheckDockerImage(os_details)
+	DockerCreate_noreq(os_details.Osname, os_details.Osver, os_details.Imagename, requestID)
 
-	if (startTrace.Osdetails{}) != os_details {
-		log.Println("\ntrace.dockerUtils.Docker:")
-		log.Println(os_details)
-
-		dockerUtils.DockerCleanup("dev")
-		dockerUtils.DockerCleanup("final")
-
-		dockerUtils.CreateDevImage(os_details)
-	} else {
-		json.NewEncoder(w).Encode("{\"error\":\"give correct docker image name and version\"}")
-	}
 }
 
-func DockerCopy(w http.ResponseWriter, r *http.Request) {
+func DockerCopy(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Docker Copy")
 	/* Copy User Defined Files */
 	var dir_list dockerUtils.DirList
-	dir_json, err := ioutil.ReadAll(r.Body)
+	dir_json, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		log.Println("trace.DockerCopy Error : json read failed")
+		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("trace.DockerCopy Error : json read failed")
 	}
 	json.Unmarshal(dir_json, &dir_list)
-	log.Println("List: ",dir_list)
+	log.Println("List: ", dir_list)
 
-	for _, filename := range dir_list.Dirs {
-		dockerUtils.CompressCopy(filename)
-	}
-
-	/* Copy all files used by process */
-	dockerUtils.CopyProcessFiles()
+	DockerCopy_noreq(dir_list.Dirs, requestID)
 }
 
-func FinalImageCreate(w http.ResponseWriter, r *http.Request) {
+func FinalImageCreate(rw http.ResponseWriter, req *http.Request) {
+	requestID := util.NewRequestID()
+	defer func() {
+		if r := recover(); r != nil {
+			e := misc.PanicHandler(r, requestID)
+			rw.WriteHeader(e.Code)
+			rw.Write([]byte(e.Response))
+		}
+	}()
+	vars := mux.Vars(req)
+	accID := vars["accountID"]
+	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Get ENV variables")
 	/* User name */
-	user, err := user.Current()
+	// user, err := user.Current()
+	// if err != nil {
+	// 	log.Println("trace.FinalImageCreate Error : username retrive error")
+	// }
+	var imagevar startTrace.Imagename
+	image_json, err := ioutil.ReadAll(req.Body)
+	log.Println(image_json)
 	if err != nil {
-		log.Println("trace.FinalImageCreate Error : username retrive error")
-	}
-	var imagevar startTrace.Imagename 
-	image_json, err := ioutil.ReadAll(r.Body)
-	fmt.Println(image_json)
-	if err != nil {
-		log.Println("trace.FinalImageCreate Error : json read failed")
+		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("trace.FinalImageCreate Error : json read failed")
 	}
 	json.Unmarshal(image_json, &imagevar)
-	fmt.Print(imagevar)
-	dockerUtils.FinalImage(user.Username, imagevar.Workdir, imagevar.Finalimagename)
-
+	FinalImageCreate_noreq(imagevar.Workdir, imagevar.Finalimagename, requestID)
 }

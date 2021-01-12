@@ -121,6 +121,14 @@
   version = "v1.4.2"
 
 [[projects]]
+  digest = "1:524b71991fc7d9246cc7dc2d9e0886ccb97648091c63e30eef619e6862c955dd"
+  name = "github.com/spf13/pflag"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2e9d26c8c37aae03e3f9d4e90b7116f5accb7cab"
+  version = "v1.0.5"
+
+[[projects]]
   branch = "master"
   digest = "1:04b24bb8ec92d73e7ee56c182a6eeb84f4483c09e1ccebe85c7fcf0ae8631afc"
   name = "github.com/yasuyuky/jsonpath"
@@ -169,6 +177,7 @@
     "github.com/pborman/uuid",
     "github.com/sadlil/gologger",
     "github.com/sirupsen/logrus",
+    "github.com/spf13/pflag",
     "github.com/yasuyuky/jsonpath",
     "gopkg.in/mgo.v2",
   ]

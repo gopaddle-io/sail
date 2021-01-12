@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -36,7 +36,7 @@ link=lsof -P -i :%s -sTCP:LISTEN
 service=lsof -i -sTCP:LISTEN`
 
 func CheckAgentCompatibility() bool {
-	if os_family, _, _ := GetOS(); strings.Contains(strings.ToLower(os_family), "linux") {
+	if os_family, _, _, _ := GetOS(); strings.Contains(strings.ToLower(os_family), "linux") {
 		return true
 	} else if strings.Contains(strings.ToLower(os_family), "windows") {
 		return false
@@ -58,7 +58,7 @@ func FileToString(fname string) string {
 	return string(data)
 }
 
-func Execute(cmd string,err_message string, param string) string {
+func Execute(cmd string, err_message string, param string) string {
 	ps, err := exec.Command(cmd, param).Output()
 	if err != nil {
 		log.Fatalf("util/cmd Error: %s", err_message)
@@ -68,59 +68,63 @@ func Execute(cmd string,err_message string, param string) string {
 	return result
 }
 
-func ExecuteWithOut(cmd string, param []string, filename string) {
+func ExecuteWithOut(cmd string, param []string, filename string) error {
 	ps := exec.Command(cmd, param...)
 	file, _ := os.Create(filename)
 	ps.Stdout = file
 
 	err := ps.Start()
-	if err != nil {
-		log.Printf("util/cmd Error: %s", err)
-	} else {
-		log.Printf("===== %s Executed =====", cmd)
-	}
 	ps.Wait()
+	if err != nil {
+		e := fmt.Sprintf("util/cmd Error: %s", err)
+		return errors.New(e)
+	}
+	// else {
+	// 	log.Printf("%s Executed =====", cmd)
+	// }
+	return nil
 }
 
-func ExecuteAsScript(cmd string, err_message string, param ...string) string {
-	var stderr bytes.Buffer
+func ExecuteAsScript(cmd string, message string, param ...string) (string, error) {
 	fname := StringToFile(cmd)
 	params := append([]string{fname}, param...)
 	ps := exec.Command("bash", params...)
-	ps.Stderr = &stderr
 	data, err := ps.Output()
 	if err != nil {
-		log.Printf("util/cmd ExecuteAsScript: %s : %s", err, err_message)
+		e := fmt.Sprintf("util/cmd ExecuteAsScript :%s %s", message, err.Error())
+		log.Println(e)
+		return "", errors.New(e)
 	}
 	os.Remove(fname)
-	return string(data)
+	return string(data), nil
 }
 
 func ExcuteAsScriptOut(cmd string, filename string, param ...string) {
 	fname := StringToFile(cmd)
 	params := append([]string{fname}, param...)
 	ps := exec.Command("bash", params...)
-	file, _ :=  os.Create(filename)
+	file, _ := os.Create(filename)
 	ps.Stdout = file
 
 	err := ps.Start()
 	if err != nil {
 		log.Printf("util/cmd Error")
 	} else {
-		log.Printf("===== %s Executed =====", cmd)
+		log.Printf(" %s Executed ", cmd)
 	}
 	ps.Wait()
 }
 
-func ExecBg(cmd string, param ...string) *exec.Cmd{
+func ExecBg(cmd string, param ...string) (*exec.Cmd, error) {
 	fname := StringToFile(cmd)
 	params := append([]string{fname}, param...)
 	ps := exec.Command("bash", params...)
 	err := ps.Start()
 	if err != nil {
-		log.Printf("util/cmd error ExecBg() command failed")
+		log.Printf("util/cmd BackGround Start Process Failed :%s", err.Error())
+		return ps, err
 	}
-	return ps
+	return ps, nil
 }
 
 func RemoveUnprintable(s string) string {
@@ -128,12 +132,18 @@ func RemoveUnprintable(s string) string {
 	return re.ReplaceAllString(s, " ")
 }
 
-func GetOS() (string, string, string) {
+func GetOS() (string, string, string, error) {
 	var os_family, os_name, os_ver = "NA", "NA", "latest"
 	os := runtime.GOOS
 	if strings.Contains(strings.ToLower(os), "linux") {
-		tmp_name := ExecuteAsScript("grep \"^NAME\" /etc/os-release | cut -d \"=\" -f 2 | tr -d \"\\\" \\n\" | head -n 1", "")
-		tmp_ver:= ExecuteAsScript("grep \"^VERSION_ID\" /etc/os-release | cut -d \"=\" -f 2 | tr -d \"\\\" \\n\"", "")
+		tmp_name, err := ExecuteAsScript("grep \"^NAME\" /etc/os-release | cut -d \"=\" -f 2 | tr -d \"\\\" \\n\" | head -n 1", "")
+		if err != nil {
+			return "", "", "", err
+		}
+		tmp_ver, err := ExecuteAsScript("grep \"^VERSION_ID\" /etc/os-release | cut -d \"=\" -f 2 | tr -d \"\\\" \\n\"", "")
+		if err != nil {
+			return "", "", "", err
+		}
 		if tmp_name != "" {
 			os_name = strings.ToLower(tmp_name)
 		}
@@ -142,12 +152,13 @@ func GetOS() (string, string, string) {
 		}
 		os_family = os
 
-	} else if strings.Contains(strings.ToLower(os), "windows") {
-		log.Println("Found Window and Un-Supported")
-	} else if strings.Contains(strings.ToLower(os), "darwin") {
-		log.Println("Found MacOS and Un-Supported")
 	}
-	return os_family, os_name, os_ver
+	// else if strings.Contains(strings.ToLower(os), "windows") {
+	// 	return "", "", "", errors.New("Found Window and Un-Supported")
+	// } else if strings.Contains(strings.ToLower(os), "darwin") {
+	// 	return "", "", "", errors.New("Found MacOS and Un-Supported")
+	// }
+	return os_family, os_name, os_ver, nil
 }
 
 func GetScript(name string) string {
@@ -166,7 +177,7 @@ func GetConfigFile() string {
 func getBaseScripts() map[string]string {
 	// log.Printf("Loading Base Scripts for Agent [%s.(%s).(%s)]......", os_family, os_name, os_ver)
 	var script string
-	if os_family, _, _ := GetOS(); strings.Contains(os_family, "linux") || strings.Contains(os_family, "darwin") {
+	if os_family, _, _, _ := GetOS(); strings.Contains(os_family, "linux") || strings.Contains(os_family, "darwin") {
 		script = linuxScript
 	}
 	return getScripts(script)

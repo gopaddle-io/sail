@@ -1,16 +1,16 @@
 package main
 
-
 import (
-	
-	"encoding/json"
-	"flag"
 	"fmt"
+	"gopaddle/sail/misc"
 	trace "gopaddle/sail/trace"
-	"net/http"
+	util "gopaddle/sail/util"
+	"gopaddle/sail/util/cmd"
+	"log"
 	"os"
-	"bytes"
 	"os/exec"
+
+	flag "github.com/spf13/pflag"
 )
 
 func main() {
@@ -18,16 +18,16 @@ func main() {
 	listCommand := flag.NewFlagSet("list", flag.ExitOnError)
 	dockerizeCommand := flag.NewFlagSet("dockerize", flag.ExitOnError)
 	helpCommand := flag.NewFlagSet("help", flag.ExitOnError)
-	listTextPtr := listCommand.String("all", "", "What to list (Required), list --all process") 
-	listHelpPtr := listCommand.Bool("help",false,"Help regarding commands")
-	dockerizeTextPtr := dockerizeCommand.String("pid", "", "pid of process (Required)")
-	dockerizeTimePtr := dockerizeCommand.Int("time",2,"Time for which trace commands runs")
-	dockerizeImagePtr := dockerizeCommand.String("imageName","final","Final image name")
-	dockerizeHelpPtr := dockerizeCommand.Bool("help",false,"Help regarding commands")
+	listTextPtr := listCommand.StringP("all", "a", "", "list --all process")
+	listHelpPtr := listCommand.BoolP("help", "h", false, "Help regarding commands")
+	dockerizeTextPtr := dockerizeCommand.StringP("pid", "p", "", "pid of the process to trace")
+	dockerizeTimePtr := dockerizeCommand.IntP("time", "t", 2, "Time in seconds to trace the process to build its docker profile")
+	dockerizeImagePtr := dockerizeCommand.StringP("imageName", "i", "final", "Name of the final docker image")
+	dockerizeHelpPtr := dockerizeCommand.BoolP("help", "h", false, "Help regarding commands")
 
 	if len(os.Args) < 2 {
 		fmt.Println("Command required.")
-		fmt.Println("To check the commands possible, run sail help")
+		fmt.Println("To check the commands possible, run sail --help or -h")
 		os.Exit(1)
 	}
 
@@ -35,10 +35,13 @@ func main() {
 	case "list":
 		listCommand.Parse(os.Args[2:])
 	case "dockerize":
-		dockerizeCommand.Parse(os.Args[2:]) 
-	case "help":
+		dockerizeCommand.Parse(os.Args[2:])
+	case "--help":
+		helpCommand.Parse(os.Args[2:])
+	case "-h":
 		helpCommand.Parse(os.Args[2:])
 	default:
+		fmt.Println("Invalid command. Please check sail help for available options")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -46,9 +49,9 @@ func main() {
 	if listCommand.Parsed() {
 
 		if *listHelpPtr == true {
-
-			fmt.Print("\nArguments\n")
-			fmt.Printf("%-12s%s\n","all","consider all processes (syntax : saillist --all process)")
+			fmt.Print("List the Process running on the Machine for the current user. \n")
+			fmt.Print("\n")
+			fmt.Printf("   sail list (--all | -a) process.\n")
 			os.Exit(0)
 		}
 
@@ -57,7 +60,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		if os.Args[3] == "process" {
+		if len(os.Args) >= 3 && os.Args[3] == "process" {
 			out, err := exec.Command("ps", "-eo", "pid,ppid,cmd").Output()
 			if err != nil {
 				fmt.Printf("%s", err)
@@ -66,18 +69,19 @@ func main() {
 			fmt.Println(output)
 		} else {
 			fmt.Println("Enter complete command (try : sail list --all process)")
-		}		
+		}
 	}
 
 	if dockerizeCommand.Parsed() {
 
-
 		if *dockerizeHelpPtr == true {
-
-			fmt.Print("\nArguments\n")
-			fmt.Printf("%-12s%s\n","pid","Process pid (required field)")
-			fmt.Printf("%-12s%s\n","time","Time for which the process should be traced")
-			fmt.Printf("%-12s%s\n","imageName","Final image name the image created should be stored with (Default imageName is : final)")
+			fmt.Print("Migrate a running linux process in to a Docker Image. \n")
+			fmt.Print("\n")
+			fmt.Printf("sail dockerize --pid <process id> [--time <time in seconds>] [--imageName <docker image name>]\n")
+			fmt.Print("\n")
+			fmt.Printf("    %-20s%s\n", "-p, --pid", "pid of the process to trace.")
+			fmt.Printf("    %-20s%s\n", "-t, --time", "Time in seconds to trace the process to build its docker profile. Defaults to 2 seconds.")
+			fmt.Printf("    %-20s%s\n", "-i, --imageName", "Name of the final docker image. Defaults to 'final'.")
 			os.Exit(0)
 		}
 
@@ -85,52 +89,51 @@ func main() {
 			dockerizeCommand.PrintDefaults()
 			os.Exit(1)
 		}
-		values4 := map[string]string{"finalimagename": *dockerizeImagePtr,"home": "/tmp"}
-		dir := [2]string{"packages.log", "pkg_install.sh"}
-		values3 := map[string][2]string{"dirs": dir}
-		url2 := "http://localhost:9000/api/1/v1/dockercopy"
-		url3 := "http://localhost:9000/api/1/v1/finalimage"		
-		client := &http.Client{}
-		json2, err3 := json.Marshal(values3)
-		if err3 != nil {
-			panic(err3)
+		//values4 := map[string]string{"finalimagename": *dockerizeImagePtr,"home": "/tmp"}
+		dir := []string{"/tmp/sail", "packages.fmt"}
+
+		requestID := util.NewRequestID()
+		defer func() {
+			if r := recover(); r != nil {
+				misc.PanicHandler(r, requestID)
+			}
+		}()
+
+		// Start Tracing
+		log.Println("start tracing...")
+		if _, err := trace.StartTracing_noreq(*dockerizeTextPtr, *dockerizeTimePtr, requestID); err != nil {
+			log.Println("tracing failed :", err.Error())
 		}
-		json3, err4 := json.Marshal(values4)
-		if err4 != nil {
-			panic(err4)
-		}		
-		trace.StartTracing_noreq(*dockerizeTextPtr,*dockerizeTimePtr)
-			osname := "ubuntu"
-			osver := "20.04"
-			trace.DockerCreate_noreq(osname, osver, "final")
-			req1, err1 := http.NewRequest(http.MethodPut, url2, bytes.NewBuffer(json2))
-			if err1 != nil {
-				fmt.Println(err1)
-			}
-			req1.Header.Set("Content-Type", "application/json; charset=utf-8")
-			resp, err2 := client.Do(req1)
-			if err2 != nil {
-				fmt.Println(err2)
-			}
-			fmt.Print("Copying log file of trace to container...")
-			req3, err6 := http.NewRequest(http.MethodPut, url3, bytes.NewBuffer(json3))
-			if err6 != nil {
-				fmt.Println(err6)
-			}
-			req1.Header.Set("Content-Type", "application/json; charset=utf-8")
-			resp, err5 := client.Do(req3)
-			if err5 != nil {
-				fmt.Println(err5)
-			}
-			fmt.Print(*dockerizeImagePtr + " created")
-			fmt.Println("   ",resp.StatusCode)
-			fmt.Println("To check the image, use command : docker image inspect " + *dockerizeImagePtr)
+		log.Println("tracing completed")
+
+		// Docker Create
+		_, osname, osver, _ := cmd.GetOS()
+		log.Println("Docker creating...")
+		if _, err := trace.DockerCreate_noreq(osname, osver, "final", requestID); err != nil {
+			log.Println("Docker container creation failed :", err.Error())
+		}
+		log.Println("Docker creating completed")
+
+		//Docker Copy
+		log.Println("Docker file copying ...")
+		if _, err := trace.DockerCopy_noreq(dir, requestID); err != nil {
+			log.Println("Docker file copy failed :", err.Error())
+		}
+		log.Println("Docker file copying completed")
+		log.Println("Copying fmt file of trace to container...")
+
+		//Docker final image create
+		trace.FinalImageCreate_noreq("$HOME", *dockerizeImagePtr, requestID)
+		log.Println(*dockerizeImagePtr + " created")
+		log.Println("To check the image, use command : docker image inspect " + *dockerizeImagePtr)
+
 	}
 
 	if helpCommand.Parsed() {
-		fmt.Println("Enter sail [command] --help for more details on specific commands and their arguments.\nUse --[argument] for additional arguments")
-		fmt.Println("\nCommands")
-		fmt.Printf("%-12s%s\n","list","list processes")
-		fmt.Printf("%-12s%s\n","dockerize","given a process id (pid),it traces the process, creates a container for it and creates the image")
+		fmt.Print("Migrate a running linux process in to a Docker Image. \n")
+		fmt.Println("\nEnter sail <command> --help or -h for more details on specific commands and their arguments.")
+		fmt.Println("\nCommands:")
+		fmt.Printf("    %-12s%s\n", "dockerize", "Migrate a linux process to Docker Image")
+		fmt.Printf("    %-12s%s\n", "list", "List all processes owned by the current user")
 	}
 }

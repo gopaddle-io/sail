@@ -7,6 +7,7 @@ import (
 	"gopaddle/sail/util/json"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -75,7 +76,11 @@ func LoadConfig(env string) bool {
 
 	log.Println("Environment: ", env)
 
-	osFamily, osName, osVersion := cmd.GetOS()
+	osFamily, osName, osVersion, err := cmd.GetOS()
+	if err != nil {
+		log.Println("Error while loading Env: ", err)
+		os.Exit(0)
+	}
 	context.Instance().Set("osFamily", osFamily)
 	context.Instance().Set("osName", osName)
 	context.Instance().Set("osVersion", osVersion)
