@@ -144,7 +144,8 @@ func PortList(delay int, pid string, slog *logrus.Entry) (Network, error) {
 
 func GetDependFiles(pid string, slog *logrus.Entry) ([]string, error) {
 	var trace_files []string
-	file, err := os.Open("~/.sail/" + pid + "trace.log")
+	home := os.Getenv("HOME")
+	file, err := os.Open(home + "/.sail/" + pid + "/trace.log")
 	if err != nil {
 		slog.Printf("trace/startTrace Error: File Open error")
 		return nil, err

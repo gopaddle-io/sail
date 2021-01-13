@@ -51,15 +51,16 @@ func GetList(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(response.Code)
 		rw.Write([]byte(response.Response))
 	}
-	if pid == "" && cmd == "" && err != nil {
+	if pid == "" && cmd == "" && err == nil {
 		json.NewEncoder(rw).Encode(processes)
-	}
-	for _, singleProcess := range processes {
-		if pid != "" && singleProcess.Pid == pid {
-			log.Printf("Pid: %s", singleProcess.Pid)
-			json.NewEncoder(rw).Encode(singleProcess)
-		} else if cmd != "" && strings.Contains(singleProcess.Cmd, cmd) {
-			json.NewEncoder(rw).Encode(singleProcess)
+	} else {
+		for _, singleProcess := range processes {
+			if pid != "" && singleProcess.Pid == pid {
+				log.Printf("Pid: %s", singleProcess.Pid)
+				json.NewEncoder(rw).Encode(singleProcess)
+			} else if cmd != "" && strings.Contains(singleProcess.Cmd, cmd) {
+				json.NewEncoder(rw).Encode(singleProcess)
+			}
 		}
 	}
 
@@ -275,6 +276,8 @@ func DockerCreate(rw http.ResponseWriter, req *http.Request) {
 	}()
 	vars := mux.Vars(req)
 	accID := vars["accountID"]
+	keys := req.URL.Query()
+	pid := keys.Get("pid")
 	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Docker")
 	var os_details startTrace.Osdetails
 	os_det_json, err := ioutil.ReadAll(req.Body)
@@ -282,7 +285,7 @@ func DockerCreate(rw http.ResponseWriter, req *http.Request) {
 		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Error in Json input startTracing.Osdetails")
 	}
 	json.Unmarshal(os_det_json, &os_details)
-	DockerCreate_noreq(os_details.Osname, os_details.Osver, os_details.Imagename, requestID)
+	DockerCreate_noreq(os_details.Osname, os_details.Osver, os_details.Imagename, requestID, pid)
 
 }
 

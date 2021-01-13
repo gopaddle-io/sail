@@ -194,7 +194,8 @@ func StartTracing_noreq(pid string, trace_time int, requestID string) (string, e
 		sCxt.Log.Printf("\nProcess (PID = %s) success", process.Pid)
 
 		/* strace */
-		strace := fmt.Sprintf("cd %s && timeout %ds strace -e trace=file -f -o ~/.sail/%s/trace.log %s", pcwd, trace_time, process.Pid, process.Cmd)
+		strace := fmt.Sprintf("timeout %ds strace -e trace=file -f -o ~/.sail/%s/trace.log %s", trace_time, process.Pid, process.Cmd)
+		strace = "cd " + pcwd + strace
 		sCxt.Log.Println(strace)
 		ps, err := cmd.ExecBg(strace)
 		if err != nil {
@@ -274,7 +275,7 @@ func StartTracing_noreq(pid string, trace_time int, requestID string) (string, e
 	return "Strace successfully completed", nil
 }
 
-func DockerCreate_noreq(osname string, osver string, imagename string, requestID string) (string, error) {
+func DockerCreate_noreq(osname string, osver string, imagename string, requestID string, pid string) (string, error) {
 	var os_details startTrace.Osdetails
 	os_details.Osname = osname
 	os_details.Osver = osver
@@ -291,13 +292,13 @@ func DockerCreate_noreq(osname string, osver string, imagename string, requestID
 		sCxt.Log.Println(os_details)
 
 		if err := dockerUtils.DockerCleanup("dev", sCxt.Log); err != nil {
-			return "", err
+			// return "", err
 		}
 		if err := dockerUtils.DockerCleanup(imagename, sCxt.Log); err != nil {
-			return "", err
+			// return "", err
 		}
 
-		if err := dockerUtils.CreateDevImage(os_details, sCxt.Log); err != nil {
+		if err := dockerUtils.CreateDevImage(os_details, sCxt.Log, pid); err != nil {
 			return "", err
 		}
 	} else {

@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -88,9 +89,28 @@ func DockerCleanup(container string, slog *logrus.Entry) error {
 	return nil
 }
 
-func CreateDevImage(os_details startTrace.Osdetails, slog *logrus.Entry) error {
+func CreateDevImage(os_details startTrace.Osdetails, slog *logrus.Entry, pid string) error {
+	home := os.Getenv("HOME")
+	file, err := ioutil.ReadFile(home + "/.sail/" + pid + "/packages.log")
+	if err != nil {
+		slog.Println("Failed on Reading env file : %s ", err.Error())
+		return err
+	}
+	dst := string(file[:])
+	p, err := os.Create("./packages.log")
+	if err != nil {
+		slog.Println("trace.dockerUtils Error: file creation")
+		return err
+	}
+	defer p.Close()
+
+	_, err1 := p.WriteString(dst)
+	if err1 != nil {
+		slog.Println("trace.dockerUtils Error: file write")
+		return err
+	}
 	dockerfile := fmt.Sprintf(`FROM %s:%s
-COPY packages.log /packages.log
+COPY /packages.log /packages.log
 COPY pkg_install.sh /pkg_install.sh
 
 RUN chmod +x /pkg_install.sh && bash /pkg_install.sh
@@ -105,7 +125,7 @@ CMD /bin/bash`, os_details.Osname, os_details.Osver)
 	}
 	defer f.Close()
 
-	_, err1 := f.WriteString(dockerfile)
+	_, err1 = f.WriteString(dockerfile)
 	if err1 != nil {
 		slog.Println("trace.dockerUtils Error: file write")
 		return err
@@ -119,7 +139,7 @@ CMD /bin/bash`, os_details.Osname, os_details.Osver)
 		return err
 	}
 	if _, err = cmd.ExecuteAsScript("docker start dev", "trace.dockerUtils Error: container \"dev\" start failed"); err != nil {
-		return err
+		// return err
 	}
 	return nil
 }
@@ -134,14 +154,14 @@ func CompressCopy(filename string, slog *logrus.Entry) error {
 	if info.IsDir() {
 		compress := fmt.Sprintf("tar -czf folder.tar.gz -C %s .", filename)
 		if _, err = cmd.ExecuteAsScript(compress, "trace.dockerUtils Error : compression failed"); err != nil {
-			return err
+			// return err
 		}
 		if _, err = cmd.ExecuteAsScript("docker cp folder.tar.gz dev:folder.tar.gz", "trace.dockerUtils Error : docker copy failed"); err != nil {
-			return err
+			// return err
 		}
 		zip_remove := fmt.Sprintf("docker exec -i dev bash -c \"mkdir -p %s 2>/dev/null && tar -xzf folder.tar.gz -C %s && rm folder.tar.gz\"", filename, filename)
 		if _, err = cmd.ExecuteAsScript(zip_remove, "trace.dockerUtils Error : docker folder.tar.gz copy or extraction failed"); err != nil {
-			return err
+			// return err
 		}
 	} else {
 		copy_file := fmt.Sprintf("docker cp %s dev:%s", filename, filename)
