@@ -113,7 +113,7 @@ func main() {
 		log.Println("Docker creating...")
 		if _, err := trace.DockerCreate_noreq(osname, osver, "final", requestID, *dockerizeTextPtr); err != nil {
 			log.Println("Docker container creation failed :", err.Error())
-			os.Exit(1)
+			// os.Exit(1)
 		}
 		log.Println("Docker creating completed")
 
@@ -121,7 +121,7 @@ func main() {
 		log.Println("Docker file copying ...")
 		if _, err := trace.DockerCopy_noreq(dir, requestID); err != nil {
 			log.Println("Docker file copy failed :", err.Error())
-			os.Exit(1)
+			// os.Exit(1)
 		}
 		log.Println("Docker file copying completed")
 		log.Println("Copying fmt file of trace to container...")

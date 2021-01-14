@@ -2,3 +2,5 @@ vendor/
 sail
 Dockerfile
 *.log
+cmd/sail
+cmd/folder.*

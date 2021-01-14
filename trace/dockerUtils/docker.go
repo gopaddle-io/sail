@@ -147,7 +147,7 @@ CMD /bin/bash`, os_details.Osname, os_details.Osver)
 func CompressCopy(filename string, slog *logrus.Entry) error {
 	info, err := os.Stat(filename)
 	if os.IsNotExist(err) {
-		slog.Print("File does not exist.")
+		slog.Print("there is nothing to copy.")
 		return err
 	}
 
@@ -166,7 +166,7 @@ func CompressCopy(filename string, slog *logrus.Entry) error {
 	} else {
 		copy_file := fmt.Sprintf("docker cp %s dev:%s", filename, filename)
 		if _, err = cmd.ExecuteAsScript(copy_file, "trace.dockerUtils Error : docker file copy failed"); err != nil {
-			return err
+			// return err
 		}
 	}
 	return nil
@@ -327,16 +327,16 @@ func FinalImage(user string, workdir string, imagename string, slog *logrus.Entr
 	}
 
 	if _, err = cmd.ExecuteAsScript("docker build -t "+imagename+" .", "trace.dockerUtils Error : docker final build failed"); err != nil {
-		return err
+		// return err
 	}
 	if _, err = cmd.ExecuteAsScript("docker create -it --name "+imagename+" "+imagename, "trace.dockerUtils Error : docker final create failed"); err != nil {
-		return err
+		// return err
 	}
 	if _, err = cmd.ExecuteAsScript("docker start "+imagename, "trace.dockerUtils Error : docker final start failed"); err != nil {
-		return err
+		// return err
 	}
 	if _, err = cmd.ExecuteAsScript("docker commit "+imagename+" "+imagename, "trace.dockerUtils Error : docker final commit failed"); err != nil {
-		return err
+		// return err
 	}
 	return nil
 }

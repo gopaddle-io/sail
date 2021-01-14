@@ -111,10 +111,11 @@ func ENVList(pid string, slog *logrus.Entry) error {
 func PortList(delay int, pid string, slog *logrus.Entry) (Network, error) {
 	networks := Network{}
 	command := fmt.Sprintf("netstat -ntlp | grep %s > ~/.sail/%s/ports.log", pid, pid)
+	// ss -l -p -n | grep pid=10749 > ~/.sail/10749/ports.log
 
 	fmt.Println(command)
 	if _, err := cmd.ExecuteAsScript(command, "ports log list failed"); err != nil {
-		return networks, err
+		// return networks, err
 	}
 
 	home := os.Getenv("HOME")
