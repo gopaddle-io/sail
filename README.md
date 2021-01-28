@@ -146,6 +146,8 @@ sail dockerize --pid <process id> [--time <time in seconds>] [--imageName <docke
 
 ## To Strace your process and create a docker image and run as container:
 
+Use -v or --verbose to run with verbose mode
+
 ```
 
 $ ./sail dockerize -p 14141 -i nodechecker -t 20 -d /home/bluemeric/codebase/src/gopaddle/nodechecker 
