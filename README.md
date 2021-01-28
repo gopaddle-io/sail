@@ -99,7 +99,11 @@ Request :
 # Command Line Utility
 
 
-command line utility for sail. 
+command line utility for sail. In the cloned code go to the cmd folder. 
+```
+$ cd cmd/
+$ go build sail.go
+```
 
 ## Prerequisites:
 
