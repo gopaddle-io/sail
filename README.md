@@ -95,3 +95,51 @@ Request :
     "home": "home_directory"
 }
 ```
+
+# Command Line Utility
+```
+To List All Process on Current User
+
+$ ./sail list --all process
+
+ 1124  1113 /opt/google/chrome/chrome --type=zygote --no-zygote-sandbox
+ 1125  1113 /opt/google/chrome/chrome --type=zygote
+ 1126  1124 /opt/google/chrome/nacl_helper
+ 1127  1125 /opt/google/chrome/nacl_helper
+ 1130  1125 /opt/google/chrome/chrome --type=zygote
+ 
+To Containerize the Process:
+
+Dockerize Help:
+
+$ ./sail dockerize -h
+
+
+Migrate a running linux process in to a Docker Image. 
+
+sail dockerize --pid <process id> [--time <time in seconds>] [--imageName <docker image name>]
+
+    -p, --pid           pid of the process to trace.
+    -t, --time          Time in seconds to trace the process to build its docker profile. Defaults to 2 seconds.
+    -i, --imageName     Name of the final docker image. Defaults to 'final'.
+    -v, --verbose       Run with Verbose Mode
+    -d, --directories   Directories to be copied(seperated by comma)
+    
+
+
+To Strace your process and create a docker image and run as container:
+
+$ ./sail dockerize -p 14141 -i nodechecker -t 20 -d /home/bluemeric/codebase/src/gopaddle/nodechecker 
+
+
+start tracing...
+tracing completed
+Docker creating...
+imageName:  nodechecker
+Docker creation completed
+Docker file copying ...
+Docker file copying completed
+Copying fmt file of trace to container...
+&{1001 1001 bluemeric  /home/bluemeric}
+nodechecker created
+
