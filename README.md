@@ -98,9 +98,20 @@ Request :
 
 # Command Line Utility
 
+
+command line utility for sail. 
+
+## Prerequisites:
+
+the current user need permission for run docker with user permission. 
+if user doesnt have permission. add like this
+
 ```
-command line utility for sail
+sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
+sudo chmod g+rwx "/home/$USER/.docker" -R
 ```
+the traced process informations will be stored under $HOME/.sail/ Directory.
+
 ## To List All Process on Current User
 ```
 
