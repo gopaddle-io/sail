@@ -34,42 +34,42 @@ Request :
 ```
 ## 3. Get files and packages
 ```
-URL : /api/{accountID}/v1/getfilepkg
+URL : /api/{accountID}/v1/getfilepkg?pid=93167
 Method : GET
 ```
 ## 4. Get ports
 ```
-URL : /api/{accountID}/v1/getports
+URL : /api/{accountID}/v1/getports?pid=93167
 Method : GET
 ```
 ## 5. Get NFS mounts
 ```
-URL : /api/{accountID}/v1/getNfsMounts
+URL : /api/{accountID}/v1/getNfsMounts?pid=93167
 Method : GET
 ```
 ## 6. Get Environment variables
 ```
-URL : /api/{accountID}/v1/getenv
+URL : /api/{accountID}/v1/getenv?pid=93167
 Method : GET
 ```
 ## 7. Get Default shell
 ```
-URL : /api/{accountID}/v1/getshell
+URL : /api/{accountID}/v1/getshell?pid=93167
 Method : GET
 ```
 ## 8. Get UID and GID
 ```
-URL : /api/{accountID}/v1/getuser
+URL : /api/{accountID}/v1/getuser?pid=93167
 Method : GET
 ```
 ## 9. Get Start Command
 ```
-URL : /api/{accountID}/v1/getstartcmd
+URL : /api/{accountID}/v1/getstartcmd?pid=93167
 Method : GET
 ```
 ## 10. Docker Create dev container
 ```
-URL : /api/{accountID}/v1/dockercreate
+URL : /api/{accountID}/v1/dockercreate?pid=93167
 Method : PUT
 Request(Optional) :
 {
@@ -79,7 +79,7 @@ Request(Optional) :
 ```
 ## 11. Docker Copy Files to dev container
 ```
-URL : /api/{accountID}/v1/dockercopy
+URL : /api/{accountID}/v1/dockercopy?pid=93167
 Method : PUT
 Request :
 {
@@ -88,7 +88,7 @@ Request :
 ```
 ## 12. Final docker image creation
 ```
-URL : /api/{accountID}/v1/finalimage
+URL : /api/{accountID}/v1/finalimage?pid=93167
 Method : PUT
 Request :
 {
