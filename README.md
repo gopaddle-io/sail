@@ -97,8 +97,12 @@ Request :
 ```
 
 # Command Line Utility
+
 ```
-To List All Process on Current User
+command line utility for sail
+```
+## To List All Process on Current User
+```
 
 $ ./sail list --all process
 
@@ -107,15 +111,17 @@ $ ./sail list --all process
  1126  1124 /opt/google/chrome/nacl_helper
  1127  1125 /opt/google/chrome/nacl_helper
  1130  1125 /opt/google/chrome/chrome --type=zygote
+ ```
  
-To Containerize the Process:
+## To Containerize the Process:
 
-Dockerize Help:
-
+## Dockerize Help:
+```
 $ ./sail dockerize -h
 
 
 Migrate a running linux process in to a Docker Image. 
+
 
 sail dockerize --pid <process id> [--time <time in seconds>] [--imageName <docker image name>]
 
@@ -125,9 +131,11 @@ sail dockerize --pid <process id> [--time <time in seconds>] [--imageName <docke
     -v, --verbose       Run with Verbose Mode
     -d, --directories   Directories to be copied(seperated by comma)
     
+```
 
+## To Strace your process and create a docker image and run as container:
 
-To Strace your process and create a docker image and run as container:
+```
 
 $ ./sail dockerize -p 14141 -i nodechecker -t 20 -d /home/bluemeric/codebase/src/gopaddle/nodechecker 
 
@@ -142,4 +150,5 @@ Docker file copying completed
 Copying fmt file of trace to container...
 &{1001 1001 bluemeric  /home/bluemeric}
 nodechecker created
+```
 
