@@ -220,7 +220,9 @@ func CopyProcessFiles(slog *logrus.Entry, pid string, vbmode bool) error {
 		line, err = filepath.Abs(line)
 		line = strings.TrimRight(line, "/")
 		info, err := os.Lstat(line)
-		slog.Printf(line)
+		if vbmode {
+			slog.Printf(line)
+		}
 		if os.IsNotExist(err) {
 			if vbmode {
 				slog.Println("trace.dockerUtils Error : file does not exist")
@@ -239,24 +241,32 @@ func CopyProcessFiles(slog *logrus.Entry, pid string, vbmode bool) error {
 					}
 					return err
 				}
-				slog.Println("Symlink:")
-				slog.Println("Original: ", original)
+				if vbmode {
+					slog.Println("Symlink:")
+					slog.Println("Original: ", original)
+				}
 				dir := filepath.Dir(original)
 				command := fmt.Sprintf("docker exec dev bash -c \"mkdir -p %s\" </dev/null", dir)
-				slog.Println(command)
+				if vbmode {
+					slog.Println(command)
+				}
 				if err = cmd.ExecuteAsCommand(command, "trace.dockerUtils Error : docker mkdir failed", vbmode); err != nil {
 					return err
 				}
 
 				command = fmt.Sprintf("docker cp %s dev:%s", original, original)
-				slog.Println(command)
+				if vbmode {
+					slog.Println(command)
+				}
 				if err = cmd.ExecuteAsCommand(command, "trace.dockerUtils Error : docker cp failed", vbmode); err != nil {
 					return err
 				}
 
 				// docker exec rm
 				command = fmt.Sprintf("docker exec dev bash -c \"rm -rf %s\" </dev/null", line)
-				slog.Println(command)
+				if vbmode {
+					slog.Println(command)
+				}
 				err = cmd.ExecuteAsCommand(command, "trace.dockerUtils Error : docker rm failed", vbmode)
 				if err != nil {
 					return err
@@ -264,7 +274,9 @@ func CopyProcessFiles(slog *logrus.Entry, pid string, vbmode bool) error {
 
 				// docker exec ln
 				command = fmt.Sprintf("docker exec dev bash -c \"ln -s %s %s\" </dev/null", original, line)
-				slog.Println(command)
+				if vbmode {
+					slog.Println(command)
+				}
 				err = cmd.ExecuteAsCommand(command, "trace.dockerUtils Error : docker symlink failed", vbmode)
 				if err != nil {
 					// return err
@@ -284,7 +296,9 @@ func CopyProcessFiles(slog *logrus.Entry, pid string, vbmode bool) error {
 
 	// ldconfig to fix libc issue
 	command := "docker exec dev bash -c \"ldconfig\" </dev/null"
-	slog.Println(command)
+	if vbmode {
+		slog.Println(command)
+	}
 	if err = cmd.ExecuteAsCommand(command, "trace.dockerUtils Error : docker ldconfig failed", vbmode); err != nil {
 		return err
 	}
