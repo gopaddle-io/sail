@@ -2,7 +2,6 @@ package listProcess
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/user"
@@ -22,42 +21,48 @@ type Process struct {
 	Etime string `json:"time"`
 }
 
-func ListLog() error {
+func ListLog(vbmode bool) error {
 	var args = []string{"-aeo", "uid,gid,pid,ppid,etimes,command"}
-	if _, pidDirerr := cmd.ExecuteAsScript("cd ~/ && mkdir "+".sail", "sail directory creation failed"); pidDirerr != nil {
+	if pidDirerr := cmd.ExecuteAsCommand("cd ~/ && mkdir "+".sail", "sail directory creation failed", vbmode); pidDirerr != nil {
 		// return "", pidDirerr
 	}
-	if _, pidDirerr := cmd.ExecuteAsScript("cd ~/.sail && mkdir "+"log", "log directory creation failed"); pidDirerr != nil {
+	if pidDirerr := cmd.ExecuteAsCommand("cd ~/.sail && mkdir "+"log", "log directory creation failed", vbmode); pidDirerr != nil {
 		// return pidDirerr
 	}
 	home := os.Getenv("HOME")
-	if err := cmd.ExecuteWithOut("ps", args, home+"/.sail/log/process_list.log"); err != nil {
+	if err := cmd.ExecuteWithOut("ps", vbmode, args, home+"/.sail/log/process_list.log"); err != nil {
 		return err
 	}
 	return nil
 }
 
-func ProcessList(slog *logrus.Entry) ([]Process, error) {
+func ProcessList(slog *logrus.Entry, vbmode bool) ([]Process, error) {
 	var processes = []Process{}
 
 	// Execute ps -eo
-	if e := ListLog(); e != nil {
+	if e := ListLog(vbmode); e != nil {
 		return processes, e
 	}
 
 	user_current, err := user.Current()
 	if err != nil {
-		slog.Println("trace.startTrace Error : GetUser error %s", err.Error())
+		if vbmode {
+			slog.Println("trace.startTrace Error : GetUser error %s", err.Error())
+		}
 		return processes, err
 	}
 	home := os.Getenv("HOME")
 	path := fmt.Sprintf("%s/.sail/log/process_list.log", home)
 	file, err := os.Open(path)
 	if err != nil {
-		slog.Println("~/.sail/process_list.go file error: %s", err.Error())
+		if vbmode {
+			slog.Println("~/.sail/process_list.go file error: %s", err.Error())
+		}
 		return processes, err
 	} else {
-		slog.Println(" Log file opened ")
+		if vbmode {
+			slog.Println(" Log file opened ")
+		}
 	}
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
@@ -67,9 +72,6 @@ func ProcessList(slog *logrus.Entry) ([]Process, error) {
 		var ps_line_slice = strings.Fields(ps_line)
 
 		if user_current.Uid == ps_line_slice[0] {
-			if ps_line_slice[2] == "1495" {
-				fmt.Println("user_current.Uid ==>>", user_current.Uid, "ps_line_slice[0]  ===>>", ps_line_slice[0], "ps_line_slice[2]==>>>", ps_line_slice[2])
-			}
 
 			newProcess := Process{
 				Pid:   ps_line_slice[2],
@@ -92,19 +94,15 @@ func ProcessList(slog *logrus.Entry) ([]Process, error) {
 	return processes, nil
 }
 
-func GetOneProcess(pid string, slog *logrus.Entry) (Process, error) {
+func GetOneProcess(pid string, slog *logrus.Entry, vbmode bool) (Process, error) {
 	var process Process
-	processes, err := ProcessList(slog)
+	processes, err := ProcessList(slog, vbmode)
 	if err != nil {
 		return process, err
 	}
 	for _, singleProcess := range processes {
-		if singleProcess.Pid == "1495" {
-			fmt.Println("singleProcess.Pid ===>>>", singleProcess.Pid)
-		}
 		if pid == singleProcess.Pid {
-			str, _ := json.Marshal(singleProcess)
-			fmt.Println("str ===>>>", string(str))
+			// str, _ := json.Marshal(singleProcess)
 			return singleProcess, nil
 		}
 	}

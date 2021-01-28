@@ -79,19 +79,19 @@ type Imagename struct {
 	Workdir        string `json:"workdir"`
 }
 
-func CheckRequire(os_name string, slog *logrus.Entry) error {
+func CheckRequire(os_name string, slog *logrus.Entry, vbmode bool) error {
 	// log := log.Log("module:sail", "requestID:"+requestID)
 	switch os_name {
 	case "ubuntu":
-		if _, err := cmd.ExecuteAsScript("dpkg -l strace &>/dev/null || sudo apt install strace", "strace could not be installed"); err != nil {
+		if err := cmd.ExecuteAsCommand("dpkg -l strace &>/dev/null || sudo apt install strace", "strace could not be installed", vbmode); err != nil {
 			return err
 		}
 	case "archlinux":
-		if _, err := cmd.ExecuteAsScript("pacman -Q strace &>/dev/null || sudo pacman -s strace", "strace could not be installed"); err != nil {
+		if err := cmd.ExecuteAsCommand("pacman -Q strace &>/dev/null || sudo pacman -s strace", "strace could not be installed", vbmode); err != nil {
 			return err
 		}
 	case "centoslinux":
-		if _, err := cmd.ExecuteAsScript("rpm -q strace &>/dev/null || sudo yum install strace", "strace could not be installed"); err != nil {
+		if err := cmd.ExecuteAsCommand("rpm -q strace &>/dev/null || sudo yum install strace", "strace could not be installed", vbmode); err != nil {
 			return err
 		}
 	default:
@@ -100,28 +100,30 @@ func CheckRequire(os_name string, slog *logrus.Entry) error {
 	}
 	return nil
 }
-func ENVList(pid string, slog *logrus.Entry) error {
+func ENVList(pid string, slog *logrus.Entry, vbmode bool) error {
 	catcmd := `cat /proc/` + pid + `/environ | tr '\0' ' ' > ~/.sail/` + pid + `/listenv.log`
-	if _, err := cmd.ExecuteAsScript(catcmd, "env list failed"); err != nil {
+	if err := cmd.ExecuteAsCommand(catcmd, "env list failed", vbmode); err != nil {
 		return err
 	}
 	return nil
 }
 
-func PortList(delay int, pid string, slog *logrus.Entry) (Network, error) {
+func PortList(delay int, pid string, slog *logrus.Entry, vbmode bool) (Network, error) {
 	networks := Network{}
 	command := fmt.Sprintf("netstat -ntlp | grep %s > ~/.sail/%s/ports.log", pid, pid)
 	// ss -l -p -n | grep pid=10749 > ~/.sail/10749/ports.log
 
-	fmt.Println(command)
-	if _, err := cmd.ExecuteAsScript(command, "ports log list failed"); err != nil {
+	// fmt.Println(command)
+	if err := cmd.ExecuteAsCommand(command, "ports log list failed", vbmode); err != nil {
 		// return networks, err
 	}
 
 	home := os.Getenv("HOME")
 	file, err := os.Open(home + "/.sail/" + pid + "/ports.log")
 	if err != nil {
-		slog.Println("ports.log open error", err)
+		if vbmode {
+			slog.Println("ports.log open error", err)
+		}
 		return networks, err
 	}
 	defer file.Close()
@@ -179,9 +181,11 @@ func searchSlice(slice []string, substr string) bool {
 }
 
 /* Get package dependencies */
-func GetDependPackages(os_name string, trace_files []string, slog *logrus.Entry) []string {
+func GetDependPackages(os_name string, trace_files []string, slog *logrus.Entry, vbmode bool) []string {
 	var pkg_list []string
-	log.Println("Os Name: ", os_name)
+	if vbmode {
+		log.Println("Os Name: ", os_name)
+	}
 	for file := range trace_files {
 		var pkg_cmd string
 		switch os_name {
@@ -193,8 +197,9 @@ func GetDependPackages(os_name string, trace_files []string, slog *logrus.Entry)
 			pkg_cmd = fmt.Sprintf("rpm -qf %s 2>/dev/null", trace_files[file])
 		default:
 			slog.Printf("startTrace.GetDependPackages: Unknown OS: %s", os_name)
+
 		}
-		str, _ := cmd.ExecuteAsScript(pkg_cmd, "startTrace.GetDependPackages Error")
+		str, _ := cmd.ExecuteAsScript(pkg_cmd, "startTrace.GetDependPackages Error", vbmode)
 		pkg_tmp := strings.Split(str, " ")
 		for pkg := range pkg_tmp {
 			if !searchSlice(pkg_list, pkg_tmp[pkg]) {

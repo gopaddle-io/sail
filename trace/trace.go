@@ -45,7 +45,7 @@ func GetList(rw http.ResponseWriter, req *http.Request) {
 	keys := req.URL.Query()
 	pid := keys.Get("pid")
 	cmd := keys.Get("cmd")
-	processes, err := listProcess.ProcessList(slog)
+	processes, err := listProcess.ProcessList(slog, true)
 	if err != nil {
 		response := misc.Response{Code: 500, Response: misc.BuildHTTPErrorJSON(err.Error(), requestID)}
 		rw.WriteHeader(response.Code)
@@ -91,7 +91,7 @@ func StartTracing(rw http.ResponseWriter, req *http.Request) {
 	if trace_time == 0 {
 		trace_time = 2
 	}
-	resp, err := StartTracing_noreq(pid, trace_time, requestID)
+	resp, err := StartTracing_noreq(pid, trace_time, requestID, true)
 	if err != nil {
 		response := misc.Response{Code: 500, Response: misc.BuildHTTPErrorJSON(err.Error(), requestID)}
 		rw.WriteHeader(response.Code)
@@ -285,7 +285,7 @@ func DockerCreate(rw http.ResponseWriter, req *http.Request) {
 		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Error in Json input startTracing.Osdetails")
 	}
 	json.Unmarshal(os_det_json, &os_details)
-	DockerCreate_noreq(os_details.Osname, os_details.Osver, os_details.Imagename, requestID, pid)
+	DockerCreate_noreq(os_details.Osname, os_details.Osver, os_details.Imagename, requestID, pid, true)
 
 }
 
@@ -300,6 +300,8 @@ func DockerCopy(rw http.ResponseWriter, req *http.Request) {
 	}()
 	vars := mux.Vars(req)
 	accID := vars["accountID"]
+	keys := req.URL.Query()
+	pid := keys.Get("pid")
 	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Docker Copy")
 	/* Copy User Defined Files */
 	var dir_list dockerUtils.DirList
@@ -310,7 +312,7 @@ func DockerCopy(rw http.ResponseWriter, req *http.Request) {
 	json.Unmarshal(dir_json, &dir_list)
 	log.Println("List: ", dir_list)
 
-	DockerCopy_noreq(dir_list.Dirs, requestID)
+	DockerCopy_noreq(dir_list.Dirs, pid, requestID, true)
 }
 
 func FinalImageCreate(rw http.ResponseWriter, req *http.Request) {
@@ -324,6 +326,8 @@ func FinalImageCreate(rw http.ResponseWriter, req *http.Request) {
 	}()
 	vars := mux.Vars(req)
 	accID := vars["accountID"]
+	keys := req.URL.Query()
+	pid := keys.Get("pid")
 	log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("Requested to Get ENV variables")
 	/* User name */
 	// user, err := user.Current()
@@ -337,5 +341,5 @@ func FinalImageCreate(rw http.ResponseWriter, req *http.Request) {
 		log.Log(accID, "module:sail", "requestID:"+requestID).Infoln("trace.FinalImageCreate Error : json read failed")
 	}
 	json.Unmarshal(image_json, &imagevar)
-	FinalImageCreate_noreq(imagevar.Workdir, imagevar.Finalimagename, requestID)
+	FinalImageCreate_noreq(imagevar.Workdir, imagevar.Finalimagename, pid, requestID, true)
 }

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/gopaddle-io/sail/misc"
 	trace "github.com/gopaddle-io/sail/trace"
@@ -25,6 +26,8 @@ func main() {
 	dockerizeTimePtr := dockerizeCommand.IntP("time", "t", 2, "Time in seconds to trace the process to build its docker profile")
 	dockerizeImagePtr := dockerizeCommand.StringP("imageName", "i", "final", "Name of the final docker image")
 	dockerizeHelpPtr := dockerizeCommand.BoolP("help", "h", false, "Help regarding commands")
+	dockerizeVerbosePtr := dockerizeCommand.BoolP("verbose", "v", false, "Run with Verbose Mode")
+	dockerizeDirPtr := dockerizeCommand.StringP("directories", "d", "", "Directories to be copied(seperated by comma)")
 
 	if len(os.Args) < 2 {
 		fmt.Println("Command required.")
@@ -83,6 +86,8 @@ func main() {
 			fmt.Printf("    %-20s%s\n", "-p, --pid", "pid of the process to trace.")
 			fmt.Printf("    %-20s%s\n", "-t, --time", "Time in seconds to trace the process to build its docker profile. Defaults to 2 seconds.")
 			fmt.Printf("    %-20s%s\n", "-i, --imageName", "Name of the final docker image. Defaults to 'final'.")
+			fmt.Printf("    %-20s%s\n", "-v, --verbose", "Run with Verbose Mode")
+			fmt.Printf("    %-20s%s\n", "-d, --directories", "Directories to be copied(seperated by comma)")
 			os.Exit(0)
 		}
 
@@ -91,8 +96,14 @@ func main() {
 			os.Exit(1)
 		}
 		//values4 := map[string]string{"finalimagename": *dockerizeImagePtr,"home": "/tmp"}
-		dir := []string{"/tmp/sail", "packages.fmt"}
 
+		dir := []string{"packages.log"}
+		if *dockerizeDirPtr != "" {
+			dirs := strings.Split(*dockerizeDirPtr, ",")
+			for _, d := range dirs {
+				dir = append(dir, d)
+			}
+		}
 		requestID := util.NewRequestID()
 		defer func() {
 			if r := recover(); r != nil {
@@ -101,35 +112,81 @@ func main() {
 		}()
 
 		// Start Tracing
-		log.Println("start tracing...")
-		if _, err := trace.StartTracing_noreq(*dockerizeTextPtr, *dockerizeTimePtr, requestID); err != nil {
-			log.Println("tracing failed :", err.Error())
+		if *dockerizeVerbosePtr {
+			log.Println("start tracing...")
+		} else {
+			fmt.Println("start tracing...")
+		}
+		if _, err := trace.StartTracing_noreq(*dockerizeTextPtr, *dockerizeTimePtr, requestID, *dockerizeVerbosePtr); err != nil {
+			if *dockerizeVerbosePtr {
+				log.Println("tracing failed :", err.Error())
+			} else {
+				fmt.Println("tracing failed :", err.Error())
+			}
 			os.Exit(1)
 		}
-		log.Println("tracing completed")
+		if *dockerizeVerbosePtr {
+			log.Println("tracing completed")
+		} else {
+			fmt.Println("tracing completed")
+		}
 
 		// Docker Create
-		_, osname, osver, _ := cmd.GetOS()
-		log.Println("Docker creating...")
-		if _, err := trace.DockerCreate_noreq(osname, osver, "final", requestID, *dockerizeTextPtr); err != nil {
-			log.Println("Docker container creation failed :", err.Error())
+		_, osname, osver, _ := cmd.GetOS(*dockerizeVerbosePtr)
+		if *dockerizeVerbosePtr {
+			log.Println("Docker creating...")
+		} else {
+			fmt.Println("Docker creating...")
+		}
+		if *dockerizeImagePtr == "" {
+			*dockerizeImagePtr = "final"
+		}
+		fmt.Println("imageName: ", *dockerizeImagePtr)
+		if _, err := trace.DockerCreate_noreq(osname, osver, *dockerizeImagePtr, requestID, *dockerizeTextPtr, *dockerizeVerbosePtr); err != nil {
+			if *dockerizeVerbosePtr {
+				log.Println("Docker container creation failed :", err.Error())
+			} else {
+				fmt.Println("Docker container creation failed :", err.Error())
+			}
 			// os.Exit(1)
 		}
-		log.Println("Docker creating completed")
+		if *dockerizeVerbosePtr {
+			log.Println("Docker creation completed")
+		} else {
+			fmt.Println("Docker creation completed")
+		}
 
 		//Docker Copy
-		log.Println("Docker file copying ...")
-		if _, err := trace.DockerCopy_noreq(dir, requestID); err != nil {
-			log.Println("Docker file copy failed :", err.Error())
+		if *dockerizeVerbosePtr {
+			log.Println("Docker file copying ...")
+		} else {
+			fmt.Println("Docker file copying ...")
+		}
+		if _, err := trace.DockerCopy_noreq(dir, *dockerizeTextPtr, requestID, *dockerizeVerbosePtr); err != nil {
+			if *dockerizeVerbosePtr {
+				log.Println("Docker file copy failed :", err.Error())
+			} else {
+				fmt.Println("Docker file copy failed :", err.Error())
+			}
 			// os.Exit(1)
 		}
-		log.Println("Docker file copying completed")
-		log.Println("Copying fmt file of trace to container...")
+		if *dockerizeVerbosePtr {
+			log.Println("Docker file copying completed")
+			log.Println("Copying fmt file of trace to container...")
+		} else {
+			fmt.Println("Docker file copying completed")
+			fmt.Println("Copying fmt file of trace to container...")
+		}
 
 		//Docker final image create
-		trace.FinalImageCreate_noreq("$HOME", *dockerizeImagePtr, requestID)
-		log.Println(*dockerizeImagePtr + " created")
-		log.Println("To check the image, use command : docker image inspect " + *dockerizeImagePtr)
+		trace.FinalImageCreate_noreq("$HOME", *dockerizeImagePtr, *dockerizeTextPtr, requestID, *dockerizeVerbosePtr)
+		if *dockerizeVerbosePtr {
+			log.Println(*dockerizeImagePtr + " created")
+			log.Println("To check the image, use command : docker image inspect " + *dockerizeImagePtr)
+		} else {
+			fmt.Println(*dockerizeImagePtr + " created")
+			fmt.Println("To check the image, use command : docker image inspect " + *dockerizeImagePtr)
+		}
 
 	}
 

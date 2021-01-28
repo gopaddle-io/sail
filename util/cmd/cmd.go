@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -25,7 +26,7 @@ Command from the Template Engine
 
 */
 
-var Scripts = getBaseScripts()
+var Scripts = getBaseScripts(false)
 
 var linuxScript = `cwd=readlink /proc/%s/cwd
 cmd=cat -A /proc/%s/cmdline
@@ -35,8 +36,8 @@ net.once=lsof -P -i  | grep LISTEN
 link=lsof -P -i :%s -sTCP:LISTEN
 service=lsof -i -sTCP:LISTEN`
 
-func CheckAgentCompatibility() bool {
-	if os_family, _, _, _ := GetOS(); strings.Contains(strings.ToLower(os_family), "linux") {
+func CheckAgentCompatibility(vbmode bool) bool {
+	if os_family, _, _, _ := GetOS(vbmode); strings.Contains(strings.ToLower(os_family), "linux") {
 		return true
 	} else if strings.Contains(strings.ToLower(os_family), "windows") {
 		return false
@@ -68,7 +69,7 @@ func Execute(cmd string, err_message string, param string) string {
 	return result
 }
 
-func ExecuteWithOut(cmd string, param []string, filename string) error {
+func ExecuteWithOut(cmd string, vbmode bool, param []string, filename string) error {
 	ps := exec.Command(cmd, param...)
 	file, _ := os.Create(filename)
 	ps.Stdout = file
@@ -77,6 +78,9 @@ func ExecuteWithOut(cmd string, param []string, filename string) error {
 	ps.Wait()
 	if err != nil {
 		e := fmt.Sprintf("util/cmd Error: %s", err)
+		if vbmode {
+			log.Printf(e)
+		}
 		return errors.New(e)
 	}
 	// else {
@@ -85,18 +89,43 @@ func ExecuteWithOut(cmd string, param []string, filename string) error {
 	return nil
 }
 
-func ExecuteAsScript(cmd string, message string, param ...string) (string, error) {
+func ExecuteAsScript(cmd string, message string, vbmode bool, param ...string) (string, error) {
 	fname := StringToFile(cmd)
 	params := append([]string{fname}, param...)
 	ps := exec.Command("bash", params...)
 	data, err := ps.Output()
+	// str, _ := json.Marshal(ps.Stderr)
+	// fmt.Println("stdError =========>>>>>", string(str))
 	if err != nil {
 		e := fmt.Sprintf("util/cmd ExecuteAsScript :%s %s", message, err.Error())
-		log.Println(e)
+		if vbmode {
+			log.Println(e)
+		}
 		return "", errors.New(e)
 	}
 	os.Remove(fname)
 	return string(data), nil
+}
+
+//ExecuteAsCommand
+func ExecuteAsCommand(cm string, message string, vbmode bool, param ...string) error {
+	params := append([]string{"-c", cm}, param...)
+	cmd := exec.Command("bash", params...)
+	stderr, _ := cmd.StderrPipe()
+	err := cmd.Start()
+	if err != nil {
+		if vbmode {
+			log.Println(message, err)
+		}
+	}
+	if vbmode {
+		scanner := bufio.NewScanner(stderr)
+		for scanner.Scan() {
+			fmt.Println(message, ":", scanner.Text())
+		}
+	}
+
+	return nil
 }
 
 func ExcuteAsScriptOut(cmd string, filename string, param ...string) {
@@ -115,13 +144,15 @@ func ExcuteAsScriptOut(cmd string, filename string, param ...string) {
 	ps.Wait()
 }
 
-func ExecBg(cmd string, param ...string) (*exec.Cmd, error) {
+func ExecBg(cmd string, vbmode bool, param ...string) (*exec.Cmd, error) {
 	fname := StringToFile(cmd)
 	params := append([]string{fname}, param...)
 	ps := exec.Command("bash", params...)
 	err := ps.Start()
 	if err != nil {
-		log.Printf("util/cmd BackGround Start Process Failed :%s", err.Error())
+		if vbmode {
+			log.Printf("util/cmd BackGround Start Process Failed :%s", err.Error())
+		}
 		return ps, err
 	}
 	return ps, nil
@@ -132,15 +163,15 @@ func RemoveUnprintable(s string) string {
 	return re.ReplaceAllString(s, " ")
 }
 
-func GetOS() (string, string, string, error) {
+func GetOS(vbmode bool) (string, string, string, error) {
 	var os_family, os_name, os_ver = "NA", "NA", "latest"
 	os := runtime.GOOS
 	if strings.Contains(strings.ToLower(os), "linux") {
-		tmp_name, err := ExecuteAsScript("grep \"^NAME\" /etc/os-release | cut -d \"=\" -f 2 | tr -d \"\\\" \\n\" | head -n 1", "")
+		tmp_name, err := ExecuteAsScript("grep \"^NAME\" /etc/os-release | cut -d \"=\" -f 2 | tr -d \"\\\" \\n\" | head -n 1", "", vbmode)
 		if err != nil {
 			return "", "", "", err
 		}
-		tmp_ver, err := ExecuteAsScript("grep \"^VERSION_ID\" /etc/os-release | cut -d \"=\" -f 2 | tr -d \"\\\" \\n\"", "")
+		tmp_ver, err := ExecuteAsScript("grep \"^VERSION_ID\" /etc/os-release | cut -d \"=\" -f 2 | tr -d \"\\\" \\n\"", "", vbmode)
 		if err != nil {
 			return "", "", "", err
 		}
@@ -174,10 +205,10 @@ func GetConfigFile() string {
 	return "/etc/mobilizer/agent.conf"
 }
 
-func getBaseScripts() map[string]string {
+func getBaseScripts(vbmode bool) map[string]string {
 	// log.Printf("Loading Base Scripts for Agent [%s.(%s).(%s)]......", os_family, os_name, os_ver)
 	var script string
-	if os_family, _, _, _ := GetOS(); strings.Contains(os_family, "linux") || strings.Contains(os_family, "darwin") {
+	if os_family, _, _, _ := GetOS(vbmode); strings.Contains(os_family, "linux") || strings.Contains(os_family, "darwin") {
 		script = linuxScript
 	}
 	return getScripts(script)

@@ -77,7 +77,7 @@ func LoadConfig(env string) bool {
 
 	log.Println("Environment: ", env)
 
-	osFamily, osName, osVersion, err := cmd.GetOS()
+	osFamily, osName, osVersion, err := cmd.GetOS(true)
 	if err != nil {
 		log.Println("Error while loading Env: ", err)
 		os.Exit(0)
