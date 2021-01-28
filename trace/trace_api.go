@@ -374,7 +374,6 @@ func FinalImageCreate_noreq(workdir string, imagename string, pid, requestID str
 		}
 		return "", err
 	}
-	fmt.Println(user)
 	var imagevar startTrace.Imagename
 	imagevar.Workdir = workdir
 	imagevar.Finalimagename = imagename
