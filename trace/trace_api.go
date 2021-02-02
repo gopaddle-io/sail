@@ -180,7 +180,7 @@ func StartTracing_noreq(pid string, trace_time int, requestID string, vbmode boo
 
 		network, err := startTrace.PortList(trace_time, pid, sCxt.Log, vbmode)
 		if err != nil {
-			return "", err
+			// return "", err
 		}
 		network_marshall, err := json.Marshal(network)
 		if err != nil {
