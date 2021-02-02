@@ -165,7 +165,6 @@ Docker creation completed
 Docker file copying ...
 Docker file copying completed
 Copying fmt file of trace to container...
-&{1001 1001 bluemeric  /home/bluemeric}
 nodechecker created
 ```
 
