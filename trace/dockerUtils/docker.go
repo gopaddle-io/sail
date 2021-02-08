@@ -228,12 +228,12 @@ func CopyProcessFiles(slog *logrus.Entry, pid string, vbmode bool) error {
 				slog.Println("trace.dockerUtils Error : file does not exist")
 			}
 		} else if finished(files_done, line) && !strings.Contains(line, "/lib") {
-			if info.IsDir() {
+			if info != nil && info.IsDir() {
 				command := fmt.Sprintf("docker exec dev bash -c \"mkdir -p %s 2>/dev/null\" </dev/null", line)
 				if err = cmd.ExecuteAsCommand(command, "trace.dockerUtils Error : docker mkdir failed", vbmode); err != nil {
 					return err
 				}
-			} else if info.Mode()&os.ModeSymlink != 0 {
+			} else if info != nil && info.Mode()&os.ModeSymlink != 0 {
 				original, err := filepath.EvalSymlinks(line)
 				if err != nil {
 					if vbmode {
@@ -386,6 +386,8 @@ func FinalImage(user string, workdir string, pid, imagename string, slog *logrus
 	COPY listenv.log /home/%s/.profile
 
 	CMD cd %s && %s && /bin/bash`, user, user, uid, user, home, user, pcwd, proc_start)
+
+	//  CMD sleep 3000 && /bin/bash`, user, user, uid, user, home, user)
 
 	f, err := os.Create("./Dockerfile")
 	if err != nil {

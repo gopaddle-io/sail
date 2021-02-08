@@ -240,7 +240,7 @@ func GetEnv(pid string, slog *logrus.Entry) (EnvList, error) {
 	home := os.Getenv("HOME")
 	file, err := ioutil.ReadFile(home + "/.sail/" + pid + "/listenv.log")
 	if err != nil {
-		slog.Println("Failed on Reading env file : %s ", err.Error())
+		// slog.Println("Failed on Reading env file : %s ", err.Error())
 		return EnvList{}, err
 	}
 	dst := string(file[:])
