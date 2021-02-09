@@ -62,7 +62,7 @@ func CheckDockerImage(os_put startTrace.Osdetails, slog *logrus.Entry, vbmode bo
 		command := fmt.Sprintf("docker search %s:%s | wc -l", os_put.Osname, os_put.Osver)
 		lines_str, _ := cmd.ExecuteAsScript(command, "trace.dockerUtils Error: docker search", vbmode)
 		lines_str = strings.Trim(lines_str, " \n")
-		lines, err := strconv.Atoi(lines_str)
+		_, err := strconv.Atoi(lines_str)
 		if err != nil {
 			if vbmode {
 				slog.Println("trace.dockerutils Error: String conversion failed")
@@ -70,9 +70,9 @@ func CheckDockerImage(os_put startTrace.Osdetails, slog *logrus.Entry, vbmode bo
 			return startTrace.Osdetails{}, err
 		}
 
-		if lines < 2 {
-			return startTrace.Osdetails{}, nil
-		}
+		// if lines < 2 {
+		// 	return startTrace.Osdetails{}, nil
+		// }
 		return os_put, nil
 	}
 	return os_details, nil

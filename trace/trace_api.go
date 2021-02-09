@@ -310,8 +310,12 @@ func DockerCreate_noreq(osname string, osver string, imagename string, requestID
 	if err != nil {
 		return "", err
 	}
+	if vbmode {
+		str, _ := json.Marshal(os_details)
+		fmt.Println("osdetails ===>>>", string(str))
+	}
 
-	if (startTrace.Osdetails{}) != os_details {
+	if os_details.Osname != "" && os_details.Osver != "" {
 		if vbmode {
 			sCxt.Log.Println("\ntrace.dockerUtils.Docker:")
 			sCxt.Log.Println(os_details)
