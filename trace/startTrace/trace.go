@@ -108,17 +108,48 @@ func ENVList(pid string, slog *logrus.Entry, vbmode bool) error {
 	return nil
 }
 
-func PortList(delay int, pid string, slog *logrus.Entry, vbmode bool) (Network, error) {
-	networks := Network{}
-	command := fmt.Sprintf("netstat -ntlp | grep %s > ~/.sail/%s/ports.log", pid, pid)
-	// ss -l -p -n | grep pid=10749 > ~/.sail/10749/ports.log
-
-	// fmt.Println(command)
+func WritePID(delay int, pid string, vbmode bool) {
+	//	fmt.Println("==================ENTERING WRITEPID=================   ", pid)
+	command := fmt.Sprintf("ps --forest -g $(ps -o sid= -p %s) |awk '{ if ( NR > 2  ) { print } }' | awk '{print $1}' > ~/.sail/%s/pidList.log", pid, pid)
 	if err := cmd.ExecuteAsCommand(command, "ports log list failed", vbmode); err != nil {
-		// return networks, err
+		fmt.Printf("trace/writePID Error: File Open error")
 	}
 
+}
+
+func PortList(delay int, pid string, slog *logrus.Entry, vbmode bool) (Network, error) {
+	WritePID(delay, pid, vbmode)
+	networks := Network{}
 	home := os.Getenv("HOME")
+	pidFile, err := os.Open(home + "/.sail/" + pid + "/pidList.log")
+	if err != nil {
+		if vbmode {
+			slog.Println("ports.log open error", err)
+		}
+		return networks, err
+	}
+	defer pidFile.Close()
+	deleteCommand := fmt.Sprintf("rm ~/.sail/%s/ports.log;touch ~/.sail/%s/ports.log", pid, pid)
+	if err := cmd.ExecuteAsCommand(deleteCommand, "ports log delete failed", vbmode); err != nil {
+		// return networks, err
+	}
+	scanner_pid := bufio.NewScanner(pidFile)
+	var processes []string
+	//scanner := bufio.NewScanner()
+	scanner_pid.Split(bufio.ScanLines)
+	for scanner_pid.Scan() {
+		line := scanner_pid.Text()
+		processes = append(processes, line)
+	}
+	for _, childPid := range processes {
+		command := fmt.Sprintf("ss -tulpn | grep %s | awk '{print $5}'| cut -d ':' -f 2 >> ~/.sail/%s/ports.log", childPid, pid)
+		// ss -l -p -n | grep pid=10749 > ~/.sail/10749/ports.log
+		// fmt.Println(command)
+		if err := cmd.ExecuteAsCommand(command, "ports log list failed", vbmode); err != nil {
+			// return networks, err
+		}
+	}
+	// home := os.Getenv("HOME")
 	file, err := os.Open(home + "/.sail/" + pid + "/ports.log")
 	if err != nil {
 		if vbmode {
@@ -130,10 +161,10 @@ func PortList(delay int, pid string, slog *logrus.Entry, vbmode bool) (Network, 
 	var Ports []Port
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		line := strings.Split(scanner.Text(), " ")
-		local := strings.Split(line[14], ":")
+		//ports := strings.Split(scanner.Text(), ":")
+		port := scanner.Text()
 		local_port := Port{
-			Port: local[len(local)-1],
+			Port: port,
 		}
 		Ports = append(Ports, local_port)
 	}
