@@ -91,7 +91,7 @@ func StartTracing(rw http.ResponseWriter, req *http.Request) {
 	if trace_time == 0 {
 		trace_time = 2
 	}
-	resp, err := StartTracing_noreq(pid, trace_time, requestID, true)
+	resp, err := StartTracing_noreq(pid, trace_time, requestID, true, true)
 	if err != nil {
 		response := misc.Response{Code: 500, Response: misc.BuildHTTPErrorJSON(err.Error(), requestID)}
 		rw.WriteHeader(response.Code)
