@@ -110,7 +110,7 @@ func GetUser_noreq() startTrace.User {
 func GetStartCmd_noreq() startTrace.Start {
 	return startTrace.GetStartCmd()
 }
-func StartTracing_noreq(pid string, trace_time int, requestID string, vbmode bool) (string, error) {
+func StartTracing_noreq(pid string, trace_time int, requestID string, vbmode bool, traceEnabled bool) (string, error) {
 	clog.Init()
 	log := log.Log("module:sail", "requestID:"+requestID)
 	sCxt := NewSailContext(log, requestID)
@@ -202,30 +202,33 @@ func StartTracing_noreq(pid string, trace_time int, requestID string, vbmode boo
 			return "", err
 		}
 		os.Setenv(pid+"-pcwd", pcwd)
-		kill := fmt.Sprintf("kill %s", process.Pid)
-		if vbmode {
-			sCxt.Log.Println(kill)
-		}
-		if err := cmd.ExecuteAsCommand(kill, "process kill failed", vbmode); err != nil {
-			return "", err
-		}
-		if vbmode {
-			sCxt.Log.Printf("\nProcess (PID = %s) success", process.Pid)
-		}
+		new_pid, _ := strconv.Atoi(process.Pid)
+		if traceEnabled {
+			kill := fmt.Sprintf("kill %s", process.Pid)
+			if vbmode {
+				sCxt.Log.Println(kill)
+			}
+			if err := cmd.ExecuteAsCommand(kill, "process kill failed", vbmode); err != nil {
+				return "", err
+			}
+			if vbmode {
+				sCxt.Log.Printf("\nProcess (PID = %s) success", process.Pid)
+			}
 
-		/* strace */
-		strace := fmt.Sprintf("timeout %ds strace -e trace=file -f -o ~/.sail/%s/trace.log %s", trace_time, process.Pid, process.Cmd)
-		strace = "cd " + pcwd + strace
-		if vbmode {
-			sCxt.Log.Println(strace)
-		}
-		ps, err := cmd.ExecBg(strace, vbmode)
-		if err != nil {
-			return "", err
+			/* strace */
+			strace := fmt.Sprintf("timeout %ds strace -e trace=file -f -o ~/.sail/%s/trace.log %s", trace_time, process.Pid, process.Cmd)
+			strace = "cd " + pcwd + strace
+			if vbmode {
+				sCxt.Log.Println(strace)
+			}
+			ps, err := cmd.ExecBg(strace, vbmode)
+			if err != nil {
+				return "", err
+			}
+			new_pid = ps.Process.Pid
 		}
 
 		/* Network Tracing */
-		new_pid := ps.Process.Pid
 
 		processes, err := listProcess.ProcessList(sCxt.Log, vbmode)
 		if err != nil {
@@ -239,7 +242,7 @@ func StartTracing_noreq(pid string, trace_time int, requestID string, vbmode boo
 			}
 		}
 
-		ps.Wait()
+		//ps.Wait()
 
 		time.Sleep(time.Duration(trace_time) * time.Second)
 
@@ -250,51 +253,53 @@ func StartTracing_noreq(pid string, trace_time int, requestID string, vbmode boo
 		if vbmode {
 			sCxt.Log.Println("File and Package list making")
 		}
-		file_list, err := startTrace.GetDependFiles(pid, sCxt.Log)
-		if err != nil {
-			return "", err
-		}
-		pkg_list := startTrace.GetDependPackages(os_details.Osname, file_list, sCxt.Log, vbmode)
-
-		sort.Strings(file_list)
-
-		/* Packages */
-		home := os.Getenv("HOME")
-		file, err := os.OpenFile(home+"/.sail/"+pid+"/packages.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
-		if err != nil {
-			if vbmode {
-				sCxt.Log.Printf("failed creating file: %s", err)
+		if traceEnabled {
+			file_list, err := startTrace.GetDependFiles(pid, sCxt.Log)
+			if err != nil {
+				return "", err
 			}
-			return "", err
-		}
+			pkg_list := startTrace.GetDependPackages(os_details.Osname, file_list, sCxt.Log, vbmode)
 
-		datawriter := bufio.NewWriter(file)
+			sort.Strings(file_list)
 
-		for _, pkg := range pkg_list {
-			_, _ = datawriter.WriteString(pkg)
-		}
-
-		datawriter.Flush()
-		file.Close()
-
-		/* Files */
-
-		file, err = os.OpenFile(home+"/.sail/"+pid+"/files.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
-		if err != nil {
-			if vbmode {
-				sCxt.Log.Printf("failed creating file: %s", err)
+			/* Packages */
+			home := os.Getenv("HOME")
+			file, err := os.OpenFile(home+"/.sail/"+pid+"/packages.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+			if err != nil {
+				if vbmode {
+					sCxt.Log.Printf("failed creating file: %s", err)
+				}
+				return "", err
 			}
-			return "", err
+
+			datawriter := bufio.NewWriter(file)
+
+			for _, pkg := range pkg_list {
+				_, _ = datawriter.WriteString(pkg)
+			}
+
+			datawriter.Flush()
+			file.Close()
+
+			/* Files */
+
+			file, err = os.OpenFile(home+"/.sail/"+pid+"/files.log", os.O_APPEND|os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+			if err != nil {
+				if vbmode {
+					sCxt.Log.Printf("failed creating file: %s", err)
+				}
+				return "", err
+			}
+
+			datawriter = bufio.NewWriter(file)
+
+			for _, file := range file_list {
+				_, _ = datawriter.WriteString(file + "\n")
+			}
+
+			datawriter.Flush()
+			file.Close()
 		}
-
-		datawriter = bufio.NewWriter(file)
-
-		for _, file := range file_list {
-			_, _ = datawriter.WriteString(file + "\n")
-		}
-
-		datawriter.Flush()
-		file.Close()
 	}
 	return "Strace successfully completed", nil
 }

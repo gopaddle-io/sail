@@ -111,7 +111,7 @@ func ENVList(pid string, slog *logrus.Entry, vbmode bool) error {
 func WritePID(delay int, pid string, vbmode bool) {
 	//	fmt.Println("==================ENTERING WRITEPID=================   ", pid)
 	command := fmt.Sprintf("ps --forest -g $(ps -o sid= -p %s) |awk '{ if ( NR > 2  ) { print } }' | awk '{print $1}' > ~/.sail/%s/pidList.log", pid, pid)
-	if err := cmd.ExecuteAsCommand(command, "ports log list failed", vbmode); err != nil {
+	if err := cmd.ExecuteAsCommand(command, "pid log list failed", vbmode); err != nil {
 		fmt.Printf("trace/writePID Error: File Open error")
 	}
 

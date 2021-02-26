@@ -117,7 +117,7 @@ func main() {
 		} else {
 			fmt.Println("start tracing...")
 		}
-		if _, err := trace.StartTracing_noreq(*dockerizeTextPtr, *dockerizeTimePtr, requestID, *dockerizeVerbosePtr); err != nil {
+		if _, err := trace.StartTracing_noreq(*dockerizeTextPtr, *dockerizeTimePtr, requestID, *dockerizeVerbosePtr, true); err != nil {
 			if *dockerizeVerbosePtr {
 				log.Println("tracing failed :", err.Error())
 			} else {
