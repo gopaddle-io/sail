@@ -105,5 +105,3 @@ done
 }
 cat netegrs.json >> netingrs.json
 cat netingrs.json > netinfo.json
-cat netinfo.json
-
