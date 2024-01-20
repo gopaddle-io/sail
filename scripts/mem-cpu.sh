@@ -3,7 +3,7 @@
 # meml=mem limit memr=mem request
 # cpul=cpu limit cpur=cpu request
 
-#filtering total memory available in systema and storing as memory limit
+#filtering total memory available in a system and storing as memory limit
 meml=$(cat /proc/meminfo | grep MemTotal | tr -s ' ' | cut -d ' ' -f 2 | bc)
 #filtering current memory useage of process using PID entered and storing as memory request
 memr=$(pmap $1 | tail -1 | tr -s ' ' | cut -d ' ' -f 2 | tr -d 'K' | bc)
